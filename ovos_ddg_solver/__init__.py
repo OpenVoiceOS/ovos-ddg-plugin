@@ -12,23 +12,25 @@
 #
 import datetime
 import os.path
-from pprint import pformat
-from typing import Optional, List, Tuple, Dict, Any
+from typing import Dict, Any
+from typing import Optional, List, Tuple
 
 import requests
 from langcodes import closest_match
 from ovos_config import Configuration
-from ovos_date_parser import nice_date
 from ovos_plugin_manager.keywords import load_keyword_extract_plugin
+from ovos_plugin_manager.templates.agents import RetrievalEngine
 from ovos_plugin_manager.templates.keywords import KeywordExtractor
-from ovos_plugin_manager.templates.solvers import QuestionSolver
 from ovos_utils.log import LOG
-from padacioso import IntentContainer
-from padacioso.bracket_expansion import expand_parentheses
-from quebra_frases import sentence_tokenize
+
+try:
+    from padacioso import IntentContainer
+    from padacioso.bracket_expansion import expand_parentheses
+except ImportError:
+    IntentContainer = None
 
 
-class DuckDuckGoSolver(QuestionSolver):
+class DuckDuckGoSolver(RetrievalEngine):
     # DDG is weird and has lang-codes lang/region "backwards"
     LOCALE_MAPPING = {'ar-XA': 'xa-ar', 'en-XA': 'xa-en', 'es-AR': 'ar-es', 'en-AU': 'au-en', 'de-AT': 'at-de',
                       'fr-BE': 'be-fr', 'nl-BE': 'be-nl', 'pt-BR': 'br-pt', 'bg-BG': 'bg-bg', 'en-CA': 'ca-en',
@@ -46,9 +48,7 @@ class DuckDuckGoSolver(QuestionSolver):
                       'es-VE': 've-es', 'vi-VN': 'vn-vi'}
 
     def __init__(self, config: Optional[Dict[str, Any]] = None):
-        super().__init__(config,
-                         enable_tx=False,
-                         priority=75)
+        super().__init__(config)
         self.kword_extractors: Dict[str, KeywordExtractor] = {}
         self.intent_matchers: Dict[str, IntentContainer] = {}
         self.register_from_file()
@@ -67,10 +67,6 @@ class DuckDuckGoSolver(QuestionSolver):
             if not kword_extractor_class:
                 return None
             kword_extractor = kword_extractor_class()
-            if self.enable_tx:  # share objects to avoid re-init
-                kword_extractor._detector = self.detector
-                kword_extractor._translator = self.translator
-                kword_extractor_class.enable_tx = self.enable_tx
             self.kword_extractors[lang] = kword_extractor
         return self.kword_extractors[lang]
 
@@ -113,6 +109,10 @@ class DuckDuckGoSolver(QuestionSolver):
 
     def register_from_file(self) -> None:
         """Register internal Padacioso intents for DuckDuckGo."""
+        if IntentContainer  is None:
+            LOG.error("only basic DDG search will be used, infobox intents unavailable")
+            return
+
         files = [
             "known_for.intent",
             "resting_place.intent",
@@ -158,6 +158,7 @@ class DuckDuckGoSolver(QuestionSolver):
         """
         time_keys = ["died", "born"]
         data = self.extract_and_search(query, lang=lang, units=units)  # handles translation
+        lang = lang or Configuration().get("lang", "en")
         # parse infobox
         related_topics = [t.get("Text") for t in data.get("RelatedTopics", [])]
         infobox = {}
@@ -168,7 +169,8 @@ class DuckDuckGoSolver(QuestionSolver):
             try:
                 if k in time_keys and "time" in v:
                     dt = datetime.datetime.strptime(v["time"], "+%Y-%m-%dT%H:%M:%SZ")
-                    infobox[k] = nice_date(dt, lang=lang or self.default_lang)
+                    from ovos_date_parser import nice_date
+                    infobox[k] = nice_date(dt, lang=lang)
                 else:
                     infobox[k] = v
             except:  # probably a LF error
@@ -194,15 +196,14 @@ class DuckDuckGoSolver(QuestionSolver):
             return data
         # extract the best keyword
         kwx = self.get_keyword_extractor(lang)
-        keywords = kwx.extract(query, lang=lang)
-        if keywords:
-            kw = max(keywords)
-            LOG.debug(f"DDG search: {kw}")
-            return self.get_data(kw, lang=lang, units=units)
+        if kwx:
+            keywords = kwx.extract(query, lang=lang)
+            if keywords:
+                kw = max(keywords)
+                LOG.debug(f"DDG search: {kw}")
+                return self.get_data(kw, lang=lang, units=units)
         return {}
 
-    ########################################################
-    # abstract methods all solver plugins need to implement
     def get_data(self, query: str,
                  lang: Optional[str] = None,
                  units: Optional[str] = None) -> Dict[str, Any]:
@@ -217,7 +218,7 @@ class DuckDuckGoSolver(QuestionSolver):
             The search result data.
         """
         units = units or Configuration().get("system_unit", "metric")
-        lang = lang or self.default_lang
+        lang = lang or Configuration().get("lang", "en")
         best_lang, distance = closest_match(lang, self.LOCALE_MAPPING)
         if distance > 10:
             LOG.debug(f"Unsupported DDG locale: {lang}")
@@ -265,7 +266,7 @@ class DuckDuckGoSolver(QuestionSolver):
         Returns:
             The spoken answer.
         """
-        lang = lang or self.default_lang
+        lang = lang or Configuration().get("lang", "en")
         # match an infobox field with some basic regexes
         # (primitive intent parsing)
         intent, query = self.match_infobox_intent(query, lang=lang)
@@ -281,44 +282,19 @@ class DuckDuckGoSolver(QuestionSolver):
         data = self.extract_and_search(query, lang=lang, units=units)
         return data.get("AbstractText")
 
-    def get_expanded_answer(self, query: str,
-                            lang: Optional[str] = None,
-                            units: Optional[str] = None) -> List[Dict[str, str]]:
+    def query(self, query: str, lang: Optional[str] = None, k: int = 3) -> List[Tuple[str, float]]:
         """
-        query assured to be in self.default_lang
-        return a list of ordered steps to expand the answer, eg, "tell me more"
+        Searches the knowledge base for relevant documents or data.
 
-        {
-            "title": "optional",
-            "summary": "speak this",
-            "img": "optional/path/or/url
-        }
-        :return:
+        Args:
+            query: The search string.
+            lang: BCP-47 language code.
+            k: The maximum number of results to return.
+
+        Returns:
+            List of tuples (content, score) for the top k matches.
         """
-        img = self.get_image(query, lang=lang, units=units)
-        lang = lang or Configuration().get("lang", "en-us")
-        # match an infobox field with some basic regexes
-        # (primitive intent parsing)
-        intent, query = self.match_infobox_intent(query, lang)
-        if intent and intent not in ["question"]:
-            infobox = self.get_infobox(query, lang=lang, units=units)[0] or {}
-            LOG.debug(pformat(infobox))  # pretty print infobox in debug logs
-            answer = infobox.get(intent)
-            if answer:
-                return [{
-                    "title": query,
-                    "summary": answer,
-                    "img": img
-                }]
-
-        LOG.debug(f"DDG couldn't match infobox section, using text summary")
-        data = self.extract_and_search(query, lang=lang, units=units)
-        steps = [{
-            "title": query,
-            "summary": s,
-            "img": img
-        } for s in sentence_tokenize(data.get("AbstractText", "")) if s]
-        return steps
+        return [(self.get_spoken_answer(query, lang), 0.8)]
 
 
 DDG_PERSONA = {
@@ -334,8 +310,8 @@ if __name__ == "__main__":
 
     d = DuckDuckGoSolver()
 
-    ans = d.spoken_answer("Quem foi Bartolomeu Dias", lang="pt")
-    print(ans)
+    ans = d.query("Bartolomeu Dias", lang="pt")
+    print(ans[0][0])
     # Bartolomeu Dias, OM, OMP foi um navegador português que ficou célebre por ter sido o primeiro europeu a navegar para além do extremo sul da África, contornando o Cabo da Boa Esperança e chegando ao Oceano Índico a partir do Atlântico, abrindo o caminho marítimo para a Índia. Dele não se conhecem os antepassados, mas mercês e armas a ele outorgadas passaram a seus descendentes. Seu irmão foi Diogo Dias, também experiente navegador. Foi o principal navegador da esquadra de Pedro Álvares Cabral em 1500. As terras do Brasil, até então desconhecidas pelos portugueses, confundiram os navegadores, que pensaram tratar-se de uma ilha, a que deram o nome de "Vera Cruz".
 
     info = d.get_infobox("Stephen Hawking", lang="pt")[0]
@@ -358,33 +334,3 @@ if __name__ == "__main__":
     #  'wikidata label': 'Stephen Hawking',
     #  'youtube channel': 'UCPyd4mR0p8zHd8Z0HvHc0fw'}
 
-
-    # chunked answer, "tell me more"
-    for sentence in d.long_answer("who is Isaac Newton", lang="en"):
-        print(sentence["title"])
-        print(sentence["summary"])
-        print(sentence.get("img"))
-
-        # who is Isaac Newton
-        # Sir Isaac Newton was an English polymath active as a mathematician, physicist, astronomer, alchemist, theologian, author, and inventor.
-        # https://duckduckgo.com/i/401ff0bf4dfa0847.jpg
-
-        # who is Isaac Newton
-        # He was a key figure in the Scientific Revolution and the Enlightenment that followed.
-        # https://duckduckgo.com/i/401ff0bf4dfa0847.jpg
-
-        # who is Isaac Newton
-        # His book Philosophiæ Naturalis Principia Mathematica, first published in 1687, achieved the first great unification in physics and established classical mechanics.
-        # https://duckduckgo.com/i/401ff0bf4dfa0847.jpg
-
-        # who is Isaac Newton
-        # Newton also made seminal contributions to optics, and shares credit with German mathematician Gottfried Wilhelm Leibniz for formulating infinitesimal calculus, though he developed calculus years before Leibniz.
-        # https://duckduckgo.com/i/401ff0bf4dfa0847.jpg
-
-        # who is Isaac Newton
-        # Newton contributed to and refined the scientific method, and his work is considered the most influential in bringing forth modern science.
-        # https://duckduckgo.com/i/401ff0bf4dfa0847.jpg
-
-        # who is Isaac Newton
-        # In the Principia, Newton formulated the laws of motion and universal gravitation that formed the dominant scientific viewpoint for centuries until it was superseded by the theory of relativity.
-        # https://duckduckgo.com/i/401ff0bf4dfa0847.jpg
