@@ -1,8 +1,5 @@
-cherche sur duck au sujet de {query}
-cherche sur duck duck au sujet de {query}
-cherche sur duck duck go au sujet de {query}
-demande à duck duck go à propos de {query}
-demande à duck duck à propos de {query}
-que dit duck duck go à propos de {query}
-que dit duck duck à propos de {query}
-que dit duck à propos de {query}
+cherche sur DuckDuckGo {query}
+cherche {query} sur DuckDuckGo
+demande à DuckDuckGo des informations sur {query}
+que dit DuckDuckGo à propos de {query}
+que dit le canard à propos de {query}

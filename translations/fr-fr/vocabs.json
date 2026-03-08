@@ -1,23 +1,26 @@
 {
-    "MiscBlacklist.voc": [
-        "comment",
-        "est-ce",
-        "expliquer",
-        "installer",
-        "peux-tu",
-        "quelle heure",
-        "que sais-tu faire",
-        "sais-tu dire",
-        "tu sais faire"
-    ],
-    "More.voc": [
-        "dis-m'en plus",
-        "en savoir plus",
-        "continuer"
-    ],
-    "Weather.voc": [
-        "météo",
-        "météorologie",
-        "temps"
-    ]
+  "MiscBlacklist.voc": [
+    "comment",
+    "explique",
+    "installer",
+    "peux-tu",
+    "quelle heure",
+    "que peux-tu faire",
+    "que sais-tu faire",
+    "quelles sont tes capacités",
+    "quelles sont tes compétences",
+    "sais-tu dire",
+    "tu sais faire"
+  ],
+  "More.voc": [
+    "continue",
+    "dis-m'en plus",
+    "en savoir plus",
+    "poursuis"
+  ],
+  "Weather.voc": [
+    "météo",
+    "météorologie",
+    "temps qu'il fait"
+  ]
 }

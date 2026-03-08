@@ -1,70 +1,70 @@
 {
-    "search_duck.intent": [
-        "cherche sur duck au sujet de {query}",
-        "cherche sur duck duck au sujet de {query}",
-        "cherche sur duck duck go au sujet de {query}",
-        "demande à duck duck go à propos de {query}",
-        "demande à duck duck à propos de {query}",
-        "que dit duck duck go à propos de {query}",
-        "que dit duck duck à propos de {query}",
-        "que dit duck à propos de {query}"
-    ],
-    "alma_mater.intent": [
-        "c'est quoi alma mater"
-    ],
-    "birthdate.intent": [
-        "quand est né {query}",
-        "quand {query} est né",
-        "quelle est la date de naissance de {query}"
-    ],
-    "who.intent": [
-        "qui est {query}"
-    ],
-    "children.intent": [
-        "combien d'enfants ont",
-        "combien d'enfants ont fait"
-    ],
-    "died.intent": [
-        "date de la mort",
-        "jour de la mort",
-        "quand est-ce qu'il est mort",
-        "quand était la mort"
-    ],
-    "resting_place.intent": [
-        "où est enterré le mot-clé",
-        "où est le lieu de repos"
-    ],
-    "thesis.intent": [
-        "c'est quoi sujet de thèse"
-    ],
-    "known_for.intent": [
-        "c'est quoi connue pour",
-        "ce qui est célèbre pour"
-    ],
-    "education.intent": [
+  "search_duck.intent": [
+    "cherche sur DuckDuckGo {query}",
+    "cherche {query} sur DuckDuckGo",
+    "demande à DuckDuckGo des informations sur {query}",
+    "que dit DuckDuckGo à propos de {query}",
+    "que dit le canard à propos de {query}"
+  ],
+  "alma_mater.intent": [
+    "quelle est l'alma mater de {query}",
+    "dans quelle université {query} a-t-il étudié",
+    "dans quelle université {query} a-t-elle étudié"
+  ],
+  "birthdate.intent": [
+    "quelle est la date de naissance de {query}",
+    "quel est l'anniversaire de {query}",
+    "quand {query} est-il né",
+    "quand {query} est-elle née"
+  ],
+  "who.intent": [
+    "qui est {query}"
+  ],
+  "children.intent": [
+    "combien d'enfants a {query}",
+    "combien d'enfants {query} a-t-il",
+    "combien d'enfants {query} a-t-elle"
+  ],
+  "died.intent": [
+    "quand {query} est-il mort",
+    "quand {query} est-elle morte",
+    "quelle est la date de décès de {query}"
+  ],
+  "resting_place.intent": [
+    "où est enterré {query}",
+    "où repose {query}",
+    "où se trouve la tombe de {query}"
+  ],
+  "thesis.intent": [
+    "quel est le sujet de thèse de {query}"
+  ],
+  "known_for.intent": [
+    "pour quoi {query} est-il connu",
+    "pour quoi {query} est-elle connue",
+    "pour quoi {query} est célèbre"
+  ],
+  "education.intent": [
     "où {query} a-t-il fait ses études",
     "où {query} a-t-elle fait ses études",
     "où {query} a étudié"
-    ],
-    "official_website.intent": [
-        "quel est le site officiel {query}"
-    ],
-    "age_at_death.intent": [
-        "le jour où elle est morte",
-        "le jour où il est mort",
-        "quand elle est morte",
-        "quand il est mort",
-        "quel âge avait le mot-clé sur sa mort"
-    ],
-    "born.intent": [
-        "date de naissance",
-        "jour de naissance",
-        "le jour de naissance",
-        "quand est la naissance",
-        "quand est-ce que c'est anniversaire",
-        "quand était né"
-    ],
-    "fields.intent": [
-        "ce qui est {query} domaine d'expertise"
-    ]
+  ],
+  "official_website.intent": [
+    "quel est le site officiel de {query}",
+    "quel est le site web officiel de {query}"
+  ],
+  "age_at_death.intent": [
+    "quel âge avait {query} à sa mort",
+    "quel âge avait {query} lorsqu'il est mort",
+    "quel âge avait {query} lorsqu'elle est morte"
+  ],
+  "born.intent": [
+    "quand {query} est-il né",
+    "quand {query} est-elle née",
+    "date de naissance de {query}"
+  ],
+  "fields.intent": [
+    "quel est le domaine d'expertise de {query}",
+    "dans quel domaine {query} est-il spécialiste",
+    "dans quel domaine {query} est-elle spécialiste"
+  ]
 }

@@ -1,10 +1,10 @@
 {
-    "thats all.dialog": [
-        "c'est tout ce que je sais",
-        "c'est tout ce que j'ai trouv\u00e9"
-    ],
-    "no_answer.dialog": [
-        "DuckDuckGo ne connaît pas la réponse.",
-        "Je n'ai pas trouvé de réponse sur DuckDuckGo."
-    ]
+  "thats all.dialog": [
+    "C'est tout ce que je sais.",
+    "C'est tout ce que j'ai trouvé."
+  ],
+  "no_answer.dialog": [
+    "DuckDuckGo n'a pas trouvé de réponse.",
+    "Je n'ai pas trouvé de réponse sur DuckDuckGo."
+  ]
 }

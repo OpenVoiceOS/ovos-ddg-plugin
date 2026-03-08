@@ -1,3 +1,4 @@
-quand est né {query}
-quand {query} est né
+quand {query} est-elle née
+quand {query} est-il né
+quel est l'anniversaire de {query}
 quelle est la date de naissance de {query}
