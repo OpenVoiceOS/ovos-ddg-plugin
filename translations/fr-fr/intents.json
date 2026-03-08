@@ -42,9 +42,9 @@
         "ce qui est célèbre pour"
     ],
     "education.intent": [
-        "où a obtenu son éducation",
-        "où elle a eu l'éducation",
-        "où l'a fait étude"
+    "où {query} a-t-il fait ses études",
+    "où {query} a-t-elle fait ses études",
+    "où {query} a étudié"
     ],
     "official_website.intent": [
         "quel est le site officiel {query}"

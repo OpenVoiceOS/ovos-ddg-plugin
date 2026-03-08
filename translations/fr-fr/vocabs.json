@@ -1,7 +1,23 @@
 {
+    "MiscBlacklist.voc": [
+        "comment",
+        "est-ce",
+        "expliquer",
+        "installer",
+        "peux-tu",
+        "quelle heure",
+        "que sais-tu faire",
+        "sais-tu dire",
+        "tu sais faire"
+    ],
     "More.voc": [
         "dis-m'en plus",
         "en savoir plus",
         "continuer"
+    ],
+    "Weather.voc": [
+        "météo",
+        "météorologie",
+        "temps"
     ]
 }

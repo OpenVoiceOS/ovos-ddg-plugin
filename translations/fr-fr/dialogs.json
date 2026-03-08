@@ -4,6 +4,7 @@
         "c'est tout ce que j'ai trouv\u00e9"
     ],
     "no_answer.dialog": [
-        "le duck ne connait pas la r\u00e9ponse"
+        "DuckDuckGo ne connaît pas la réponse.",
+        "Je n'ai pas trouvé de réponse sur DuckDuckGo."
     ]
 }
