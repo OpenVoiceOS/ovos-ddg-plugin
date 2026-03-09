@@ -4,9 +4,9 @@
   "name": "DuckDuckGo",
   "description": "Répond aux questions avec DuckDuckGo.",
   "examples": [
-    "quand Stephen Hawking est-il né ?",
-    "demande à DuckDuckGo ce qu'est le Big Bang",
-    "qui est Elon Musk ?"
+    "Demande à DuckDuckGo quand Stephen Hawking est né",
+    "Cherche le Big Bang sur DuckDuckGo",
+    "Qui est Elon Musk sur DuckDuckGo ?"
   ],
   "tags": [
     "duckduckgo",
