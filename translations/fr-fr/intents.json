@@ -1,24 +1,8 @@
 {
-  "search_duck.intent": [
-    "cherche sur DuckDuckGo {query}",
-    "cherche {query} sur DuckDuckGo",
-    "demande à DuckDuckGo des informations sur {query}",
-    "que trouve DuckDuckGo sur {query}",
-    "quelles informations DuckDuckGo a-t-il sur {query}"
-  ],
   "alma_mater.intent": [
     "quelle est l'alma mater de {query}",
     "dans quelle université {query} a-t-il étudié",
     "dans quelle université {query} a-t-elle étudié"
-  ],
-  "birthdate.intent": [
-    "quelle est la date de naissance de {query}",
-    "quel est l'anniversaire de {query}",
-    "quand {query} est-il né",
-    "quand {query} est-elle née"
-  ],
-  "who.intent": [
-    "qui est {query}"
   ],
   "children.intent": [
     "combien d'enfants a {query}",
@@ -32,6 +16,7 @@
   ],
   "resting_place.intent": [
     "où est enterré {query}",
+    "où est enterrée {query}",
     "où repose {query}",
     "où se trouve la tombe de {query}"
   ],
@@ -41,12 +26,12 @@
   "known_for.intent": [
     "pour quoi {query} est-il connu",
     "pour quoi {query} est-elle connue",
-    "pour quoi {query} est célèbre"
+    "qu'est-ce qui a rendu {query} célèbre"
   ],
   "education.intent": [
     "où {query} a-t-il fait ses études",
     "où {query} a-t-elle fait ses études",
-    "où {query} a étudié"
+    "où {query} a fait ses études"
   ],
   "official_website.intent": [
     "quel est le site officiel de {query}",
@@ -58,6 +43,8 @@
     "quel âge avait {query} lorsqu'elle est morte"
   ],
   "born.intent": [
+    "quelle est la date de naissance de {query}",
+    "quel est l'anniversaire de {query}",
     "quand {query} est-il né",
     "quand {query} est-elle née",
     "date de naissance de {query}"
