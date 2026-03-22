@@ -1,4 +1,3 @@
-date de la mort
-jour de la mort
-quand est-ce qu'il est mort
-quand était la mort
+quand {query} est-elle morte
+quand {query} est-il mort
+quelle est la date de décès de {query}

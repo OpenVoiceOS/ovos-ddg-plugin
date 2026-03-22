@@ -1,7 +1,22 @@
 {
-    "More.voc": [
-        "dis-m'en plus",
-        "en savoir plus",
-        "continuer"
-    ]
+  "MiscBlacklist.voc": [
+    "que peux-tu faire",
+    "que sais-tu faire",
+    "quelle heure est-il",
+    "installer une compétence",
+    "installer des compétences",
+    "quelles sont tes capacités",
+    "quelles sont tes compétences"
+  ],
+  "More.voc": [
+    "continue",
+    "dis-m'en plus",
+    "encore",
+    "plus de détails"
+  ],
+  "Weather.voc": [
+    "quel temps fait-il",
+    "quelle est la météo",
+    "météo actuelle"
+  ]
 }

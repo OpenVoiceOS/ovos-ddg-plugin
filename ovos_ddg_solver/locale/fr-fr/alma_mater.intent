@@ -1,1 +1,3 @@
-c'est quoi alma mater
+dans quelle université {query} a-t-elle étudié
+dans quelle université {query} a-t-il étudié
+quelle est l'alma mater de {query}
