@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.0.3a1](https://github.com/OpenVoiceOS/ovos-ddg-solver-plugin/tree/0.0.3a1) (2026-03-24)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-solver-plugin/compare/0.0.2a4...0.0.3a1)
+
+**Merged pull requests:**
+
+- fix: rename bare lang code locale directories [\#19](https://github.com/OpenVoiceOS/ovos-ddg-solver-plugin/pull/19) ([ovos-localize[bot]](https://github.com/apps/ovos-localize))
+- Complete French DuckDuckGo locale [\#16](https://github.com/OpenVoiceOS/ovos-ddg-solver-plugin/pull/16) ([goldyfruit](https://github.com/goldyfruit))
+
 ## [0.0.2a4](https://github.com/OpenVoiceOS/ovos-ddg-solver-plugin/tree/0.0.2a4) (2025-12-19)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-solver-plugin/compare/0.0.2a3...0.0.2a4)
