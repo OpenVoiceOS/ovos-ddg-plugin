@@ -45,21 +45,26 @@ class DuckDuckGoSolver(QuestionSolver):
                       'tr-TR': 'tr-tr', 'uk-UA': 'ua-uk', 'en-GB': 'uk-en', 'en-US': 'us-en', 'es-UE': 'ue-es',
                       'es-VE': 've-es', 'vi-VN': 'vn-vi'}
     REGISTERED_INTENTS = [
-        ("birthdate.intent", "born"),
-        ("search_duck.intent", "question"),
-        ("who.intent", "question"),
-        ("known_for.intent", None),
-        ("resting_place.intent", None),
-        ("born.intent", None),
-        ("died.intent", None),
-        ("children.intent", None),
-        ("alma_mater.intent", None),
-        ("age_at_death.intent", None),
-        ("education.intent", None),
-        ("fields.intent", None),
-        ("thesis.intent", None),
-        ("official_website.intent", None)
+        "birthdate.intent",
+        "search_duck.intent",
+        "who.intent",
+        "known_for.intent",
+        "resting_place.intent",
+        "born.intent",
+        "died.intent",
+        "children.intent",
+        "alma_mater.intent",
+        "age_at_death.intent",
+        "education.intent",
+        "fields.intent",
+        "thesis.intent",
+        "official_website.intent"
     ]
+    INTENT_TARGETS = {
+        "birthdate": "born",
+        "search_duck": "question",
+        "who": "question"
+    }
 
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         super().__init__(config,
@@ -121,7 +126,7 @@ class DuckDuckGoSolver(QuestionSolver):
         kw = match.get("entities", {}).get("query")
         intent = None
         if kw:
-            intent = match["name"]
+            intent = self.INTENT_TARGETS.get(match["name"], match["name"])
             LOG.debug(f"DDG Intent: {intent} Query: {kw} - Confidence: {match['conf']}")
         else:
             LOG.debug(f"Could not match intent for '{lang}' from '{utterance}'")
@@ -130,7 +135,7 @@ class DuckDuckGoSolver(QuestionSolver):
     def register_from_file(self) -> None:
         """Register internal Padacioso intents for DuckDuckGo."""
         for lang in os.listdir(f"{os.path.dirname(__file__)}/locale"):
-            for fn, target_intent in self.REGISTERED_INTENTS:
+            for fn in self.REGISTERED_INTENTS:
                 filename = f"{os.path.dirname(__file__)}/locale/{lang}/{fn}"
                 if not os.path.isfile(filename):
                     LOG.warning(f"{filename} not found for '{lang}'")
@@ -144,8 +149,7 @@ class DuckDuckGoSolver(QuestionSolver):
                             samples += expand_parentheses(l)
                         else:
                             samples.append(l)
-                intent_name = target_intent or fn.split(".intent")[0]
-                self.register_infobox_intent(intent_name, samples, lang)
+                self.register_infobox_intent(fn.split(".intent")[0], samples, lang)
 
     def get_infobox(self, query: str,
                     lang: Optional[str] = None,
