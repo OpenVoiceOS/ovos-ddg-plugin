@@ -44,6 +44,7 @@ class DuckDuckGoSolver(QuestionSolver):
                       'de-CH': 'ch-de', 'fr-CH': 'ch-fr', 'it-CH': 'ch-it', 'tzh-TW': 'tw-tzh', 'th-TH': 'th-th',
                       'tr-TR': 'tr-tr', 'uk-UA': 'ua-uk', 'en-GB': 'uk-en', 'en-US': 'us-en', 'es-UE': 'ue-es',
                       'es-VE': 've-es', 'vi-VN': 'vn-vi'}
+
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         super().__init__(config,
                          enable_tx=False,
