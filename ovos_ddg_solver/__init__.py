@@ -44,12 +44,6 @@ class DuckDuckGoSolver(QuestionSolver):
                       'de-CH': 'ch-de', 'fr-CH': 'ch-fr', 'it-CH': 'ch-it', 'tzh-TW': 'tw-tzh', 'th-TH': 'th-th',
                       'tr-TR': 'tr-tr', 'uk-UA': 'ua-uk', 'en-GB': 'uk-en', 'en-US': 'us-en', 'es-UE': 'ue-es',
                       'es-VE': 've-es', 'vi-VN': 'vn-vi'}
-    INTENT_ALIASES = {
-        "birthdate": "born",
-        "search_duck": "question",
-        "who": "question"
-    }
-
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         super().__init__(config,
                          enable_tx=False,
@@ -110,7 +104,7 @@ class DuckDuckGoSolver(QuestionSolver):
         kw = match.get("entities", {}).get("query")
         intent = None
         if kw:
-            intent = self.INTENT_ALIASES.get(match["name"], match["name"])
+            intent = match["name"]
             LOG.debug(f"DDG Intent: {intent} Query: {kw} - Confidence: {match['conf']}")
         else:
             LOG.debug(f"Could not match intent for '{lang}' from '{utterance}'")
@@ -119,9 +113,6 @@ class DuckDuckGoSolver(QuestionSolver):
     def register_from_file(self) -> None:
         """Register internal Padacioso intents for DuckDuckGo."""
         files = [
-            "birthdate.intent",
-            "search_duck.intent",
-            "who.intent",
             "known_for.intent",
             "resting_place.intent",
             "born.intent",

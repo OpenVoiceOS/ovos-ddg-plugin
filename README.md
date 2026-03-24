@@ -1,14 +1,5 @@
 # DuckDuckGo Plugin
 
-## Localization workflow
-
-Edit the locale files in `ovos_ddg_solver/locale/<lang>/` when adding or fixing translations.
-
-- `scripts/prepare_translations.py` reads the locale tree and rewrites `translations/<lang>/*.json`
-- `scripts/sync_translations.py` reads `translations/<lang>/*.json` and recreates locale files
-
-If you are making normal translation changes, treat the locale files as the source of truth and regenerate the JSON snapshots from them.
-
 ```python
 from ovos_ddg_solver import DuckDuckGoSolver
 
