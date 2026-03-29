@@ -1,8 +1,21 @@
 {
+  "search_duck.intent": [
+    "demande à DuckDuckGo des informations sur {query}",
+    "cherche {query} sur DuckDuckGo",
+    "que dit DuckDuckGo sur {query}",
+    "cherche des informations sur {query} avec DuckDuckGo"
+  ],
   "alma_mater.intent": [
     "quelle est l'alma mater de {query}",
     "dans quelle université {query} a-t-il étudié",
     "dans quelle université {query} a-t-elle étudié"
+  ],
+  "birthdate.intent": [
+    "à quelle date {query} est-il né",
+    "à quelle date {query} est-elle née"
+  ],
+  "who.intent": [
+    "qui est {query}"
   ],
   "children.intent": [
     "combien d'enfants a {query}",
