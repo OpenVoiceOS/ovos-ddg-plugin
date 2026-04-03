@@ -1,0 +1,5 @@
+[opm.plugin.persona]
+DuckDuckGo = ovos_ddg_solver:DDG_PERSONA
+
+[opm.solver.question]
+ovos-solver-plugin-ddg = ovos_ddg_solver:DuckDuckGoSolver

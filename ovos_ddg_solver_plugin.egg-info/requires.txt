@@ -1,0 +1,7 @@
+ovos-utils<1.0.0,>=0.7.0
+ovos-plugin-manager<3.0.0,>=2.1.0
+ovos-bus-client>=1.0.1
+RAKEkeywords
+requests
+langcodes
+ovos-date-parser
