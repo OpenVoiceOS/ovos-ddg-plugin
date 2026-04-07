@@ -1,11 +1,12 @@
 # Changelog
 
-## [0.0.4a1](https://github.com/OpenVoiceOS/ovos-ddg-solver-plugin/tree/0.0.4a1) (2026-04-03)
+## [0.0.4a2](https://github.com/OpenVoiceOS/ovos-ddg-solver-plugin/tree/0.0.4a2) (2026-04-07)
 
-[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-solver-plugin/compare/0.0.3a1...0.0.4a1)
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-solver-plugin/compare/0.0.3a1...0.0.4a2)
 
 **Merged pull requests:**
 
+- translate\(an\): update MiscBlacklist.voc [\#22](https://github.com/OpenVoiceOS/ovos-ddg-solver-plugin/pull/22) ([ovos-localize[bot]](https://github.com/apps/ovos-localize))
 - Add remaining French DDG intents [\#17](https://github.com/OpenVoiceOS/ovos-ddg-solver-plugin/pull/17) ([goldyfruit](https://github.com/goldyfruit))
 
 ## [0.0.3a1](https://github.com/OpenVoiceOS/ovos-ddg-solver-plugin/tree/0.0.3a1) (2026-03-24)
