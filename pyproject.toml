@@ -3,7 +3,7 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ovos-ddg-solver-plugin"
+name = "ovos-ddg-plugin"
 dynamic = ["version"]
 description = "OVOS DuckDuckGo plugin — factual Q&A and infobox lookups via DDG Instant Answers"
 readme = "README.md"
@@ -29,17 +29,17 @@ dependencies = [
 Homepage = "https://github.com/OpenVoiceOS/ovos-ddg-solver-plugin"
 
 [project.entry-points."opm.agents.retrieval"]
-"ovos-ddg-plugin" = "ovos_ddg_solver:DuckDuckGoRetrievalEngine"
+"ovos-ddg-plugin" = "ovos_ddg_plugin:DuckDuckGoRetrievalEngine"
 
 [project.entry-points."opm.agents.toolbox"]
-"ovos-ddg-tools" = "ovos_ddg_solver:DuckDuckGoToolbox"
+"ovos-ddg-tools" = "ovos_ddg_plugin:DuckDuckGoToolbox"
 
 [tool.setuptools.dynamic]
-version = {attr = "ovos_ddg_solver.version.__version__"}
+version = {attr = "ovos_ddg_plugin.version.__version__"}
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["ovos_ddg_solver*"]
+include = ["ovos_ddg_plugin*"]
 
 [tool.setuptools.package-data]
-"ovos_ddg_solver" = ["locale/**/*"]
+"ovos_ddg_plugin" = ["locale/**/*"]

@@ -6,7 +6,7 @@ All network calls and OVOS config are mocked — no API key required.
 import unittest
 from unittest.mock import MagicMock, patch
 
-from ovos_ddg_solver import (
+from ovos_ddg_plugin import (
     DuckDuckGoRetrievalEngine,
     DuckDuckGoToolbox,
     SearchDuckDuckGoArgs,
@@ -17,7 +17,7 @@ from ovos_ddg_solver import (
 
 
 def _make_engine():
-    with patch("ovos_ddg_solver.Configuration", return_value={}):
+    with patch("ovos_ddg_plugin.Configuration", return_value={}):
         engine = DuckDuckGoRetrievalEngine.__new__(DuckDuckGoRetrievalEngine)
         engine.config = {}
         engine._kword_extractors = {}
@@ -36,14 +36,14 @@ class TestFetch(unittest.TestCase):
 
     def test_returns_json_on_success(self):
         payload = {"AbstractText": "Isaac Newton was a physicist."}
-        with patch("ovos_ddg_solver.requests.get") as mock_get, \
-             patch("ovos_ddg_solver.Configuration", return_value={}):
+        with patch("ovos_ddg_plugin.requests.get") as mock_get, \
+             patch("ovos_ddg_plugin.Configuration", return_value={}):
             mock_get.return_value.json.return_value = payload
             result = self.engine._fetch("Isaac Newton", lang="en-US")
         self.assertEqual(result, payload)
 
     def test_returns_empty_on_exception(self):
-        with patch("ovos_ddg_solver.requests.get", side_effect=Exception("network error")):
+        with patch("ovos_ddg_plugin.requests.get", side_effect=Exception("network error")):
             result = self.engine._fetch("Isaac Newton", lang="en-US")
         self.assertEqual(result, {})
 
@@ -94,14 +94,14 @@ class TestGetInfobox(unittest.TestCase):
             "Infobox": {"content": [{"label": "Born", "value": "1643"}]},
             "RelatedTopics": [{"Text": "gravity"}],
         })
-        with patch("ovos_ddg_solver.Configuration", return_value={}):
+        with patch("ovos_ddg_plugin.Configuration", return_value={}):
             infobox, related = self.engine.get_infobox("Newton", lang="en-us")
         self.assertEqual(infobox.get("born"), "1643")
         self.assertIn("gravity", related)
 
     def test_returns_empty_when_no_data(self):
         self.engine._search = MagicMock(return_value={})
-        with patch("ovos_ddg_solver.Configuration", return_value={}):
+        with patch("ovos_ddg_plugin.Configuration", return_value={}):
             infobox, related = self.engine.get_infobox("xyzzy", lang="en-us")
         self.assertEqual(infobox, {})
         self.assertEqual(related, [])
@@ -121,7 +121,7 @@ class TestQuery(unittest.TestCase):
         self.engine._search = MagicMock(
             return_value={"AbstractText": "Newton was born in 1643. He invented calculus."}
         )
-        with patch("ovos_ddg_solver.Configuration", return_value={}):
+        with patch("ovos_ddg_plugin.Configuration", return_value={}):
             results = self.engine.query("Isaac Newton", lang="en-us", k=5)
         self.assertIsInstance(results, list)
         self.assertTrue(len(results) > 0)
@@ -131,30 +131,33 @@ class TestQuery(unittest.TestCase):
     def test_respects_k_limit(self):
         self.engine._match_infobox_intent = MagicMock(return_value=(None, "Newton"))
         self.engine._search = MagicMock(return_value={"AbstractText": "A. B. C. D. E. F."})
-        with patch("ovos_ddg_solver.Configuration", return_value={}):
+        with patch("ovos_ddg_plugin.Configuration", return_value={}):
             results = self.engine.query("Newton", lang="en-us", k=2)
         self.assertLessEqual(len(results), 2)
 
     def test_returns_empty_when_no_data(self):
         self.engine._match_infobox_intent = MagicMock(return_value=(None, "xyzzy"))
         self.engine._search = MagicMock(return_value={})
-        with patch("ovos_ddg_solver.Configuration", return_value={}):
+        with patch("ovos_ddg_plugin.Configuration", return_value={}):
             results = self.engine.query("xyzzy", lang="en-us")
         self.assertEqual(results, [])
 
     def test_returns_infobox_answer_with_high_score(self):
         self.engine._match_infobox_intent = MagicMock(return_value=("born", "Hawking"))
         self.engine.get_infobox = MagicMock(return_value=({"born": "8 January 1942"}, []))
-        with patch("ovos_ddg_solver.Configuration", return_value={}):
+        with patch("ovos_ddg_plugin.Configuration", return_value={}):
             results = self.engine.query("when was Hawking born", lang="en-us")
         self.assertEqual(results, [("8 January 1942", 0.9)])
 
-    def test_abstract_sentences_have_lower_score(self):
+    def test_abstract_scores_decrease_with_position(self):
         self.engine._match_infobox_intent = MagicMock(return_value=(None, "Newton"))
-        self.engine._search = MagicMock(return_value={"AbstractText": "Newton was a physicist."})
-        with patch("ovos_ddg_solver.Configuration", return_value={}):
-            results = self.engine.query("Newton", lang="en-us")
-        self.assertTrue(all(score == 0.7 for _, score in results))
+        self.engine._search = MagicMock(
+            return_value={"AbstractText": "Newton was a physicist. He invented calculus. He studied at Cambridge."}
+        )
+        with patch("ovos_ddg_plugin.Configuration", return_value={}):
+            results = self.engine.query("Newton", lang="en-us", k=3)
+        scores = [score for _, score in results]
+        self.assertEqual(scores, sorted(scores, reverse=True))
 
 
 # ---------------------------------------------------------------------------
@@ -168,19 +171,19 @@ class TestGetImage(unittest.TestCase):
 
     def test_returns_full_url(self):
         self.engine._search = MagicMock(return_value={"Image": "https://duckduckgo.com/i/abc.jpg"})
-        with patch("ovos_ddg_solver.Configuration", return_value={}):
+        with patch("ovos_ddg_plugin.Configuration", return_value={}):
             result = self.engine.get_image("Newton", lang="en-us")
         self.assertEqual(result, "https://duckduckgo.com/i/abc.jpg")
 
     def test_prepends_ddg_domain_for_relative_url(self):
         self.engine._search = MagicMock(return_value={"Image": "/i/abc.jpg"})
-        with patch("ovos_ddg_solver.Configuration", return_value={}):
+        with patch("ovos_ddg_plugin.Configuration", return_value={}):
             result = self.engine.get_image("Newton", lang="en-us")
         self.assertEqual(result, "https://duckduckgo.com/i/abc.jpg")
 
     def test_returns_none_when_no_image(self):
         self.engine._search = MagicMock(return_value={"AbstractText": "Some text."})
-        with patch("ovos_ddg_solver.Configuration", return_value={}):
+        with patch("ovos_ddg_plugin.Configuration", return_value={}):
             result = self.engine.get_image("Newton", lang="en-us")
         self.assertIsNone(result)
 
@@ -213,7 +216,7 @@ class TestIntentMatching(unittest.TestCase):
 class TestDuckDuckGoToolbox(unittest.TestCase):
 
     def _make_toolbox(self):
-        with patch("ovos_ddg_solver.DuckDuckGoRetrievalEngine"):
+        with patch("ovos_ddg_plugin.DuckDuckGoRetrievalEngine"):
             return DuckDuckGoToolbox(config={})
 
     def test_discover_tools_search_tool_exists(self):
@@ -274,7 +277,7 @@ class TestDuckDuckGoToolbox(unittest.TestCase):
 class TestPluginLoading(unittest.TestCase):
 
     def test_imports(self):
-        from ovos_ddg_solver import (
+        from ovos_ddg_plugin import (
             DuckDuckGoRetrievalEngine,
             DuckDuckGoToolbox,
             SearchDuckDuckGoArgs,

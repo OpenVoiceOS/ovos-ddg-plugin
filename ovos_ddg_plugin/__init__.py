@@ -182,7 +182,7 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
         data = self._search(query, lang)
         abstract = data.get("AbstractText")
         if abstract:
-            return [(s, 0.7) for s in sentence_tokenize(abstract) if s][:k]
+            return [(s, 0.9 - idx * 0.1) for idx, s in enumerate(sentence_tokenize(abstract)) if s][:k]
         return []
 
 
