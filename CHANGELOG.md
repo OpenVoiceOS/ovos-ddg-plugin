@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.0a3](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.0.0a3) (2026-04-21)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.0.0a2...1.0.0a3)
+
+**Merged pull requests:**
+
+- Update dependency ovos-config to v2 [\#24](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/24) ([renovate[bot]](https://github.com/apps/renovate))
+
 ## [1.0.0a2](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.0.0a2) (2026-04-21)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/0.0.4a2...1.0.0a2)
