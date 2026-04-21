@@ -1,0 +1,3 @@
+who (coaches|coached) {person}
+{person} coach
+who is {person} coach

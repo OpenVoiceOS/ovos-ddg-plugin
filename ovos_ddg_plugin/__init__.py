@@ -74,21 +74,51 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
     # Aliases are tried in order; first non-None value wins.
     FIELD_ALIASES: Dict[str, List[str]] = {
         "alma_mater":        ["education"],
-        "resting_place":     ["resting_place", "burial"],
+        "resting_place":     ["resting_place", "burial", "burial_place"],
         "notable_awards":    ["notable_awards", "awards"],
-        "doctoral_students": ["doctoral_students", "other_academic_advisors"],
+        "doctoral_students": ["doctoral_students", "other_academic_advisors", "notable_students", "other_notable_students"],
+        "predecessor":       ["predecessor", "preceded_by"],
+        "successor":         ["successor", "succeeded_by"],
+        "notable_work":      ["notable_work", "notable_works", "works"],
+        "movement":          ["movement", "style"],
+        "founders":          ["founders", "founder(s)"],
+        "released":          ["released", "first_appeared"],
+        "founded":           ["founded", "launched"],
+        "other_names":       ["other_names", "other_name(s)", "also_known_as"],
+        "country":           ["country", "countries"],
+        "partner":           ["partner", "partner(s)"],
+        "years_active":      ["years_active", "active"],
+        "designed_by":       ["designed_by", "architect"],
     }
 
     def _load_intents(self) -> None:
         """Load Padacioso infobox intent files from the bundled locale directory."""
         files = [
-            "born.intent", "died.intent", "known_for.intent", "resting_place.intent",
-            "children.intent", "alma_mater.intent", "age_at_death.intent",
-            "education.intent", "fields.intent", "thesis.intent", "official_website.intent",
-            "institutions.intent", "notable_awards.intent", "notable_work.intent",
-            "movement.intent", "occupation.intent", "predecessor.intent", "successor.intent",
-            "religion.intent", "doctoral_students.intent", "baptised.intent",
-            "father.intent", "mother.intent",
+            # person: biography
+            "born.intent", "died.intent", "known_for.intent", "age_at_death.intent",
+            "resting_place.intent", "baptised.intent", "father.intent", "mother.intent",
+            "children.intent", "partner.intent", "height.intent", "citizenship.intent",
+            # person: career / academic
+            "occupation.intent", "fields.intent", "institutions.intent", "alma_mater.intent",
+            "education.intent", "thesis.intent", "doctoral_students.intent",
+            "notable_work.intent", "notable_awards.intent", "movement.intent",
+            "religion.intent", "official_website.intent", "years_active.intent",
+            # person: sports
+            "sport.intent", "coached_by.intent",
+            # person: politics
+            "political_party.intent", "predecessor.intent", "successor.intent",
+            # person: age / demographics
+            "age.intent",
+            # film
+            "director.intent", "starring.intent", "released.intent", "running_time.intent",
+            "budget.intent", "box_office.intent",
+            # company / organization
+            "founded.intent", "founders.intent", "industry.intent", "ceo.intent",
+            "owner.intent", "revenue.intent",
+            # geography
+            "country.intent", "location.intent", "elevation.intent", "length.intent",
+            # generic
+            "other_names.intent", "inventor.intent", "license.intent", "designed_by.intent",
         ]
         locale_dir = os.path.join(os.path.dirname(__file__), "locale")
         if not os.path.isdir(locale_dir):
@@ -127,7 +157,8 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
         # Strip possessive 's so "Darwin's father" matches "{keyword} father" patterns.
         normalised = utterance.replace("'s ", " ").replace("'s ", " ")
         match = self._intent_matchers[lang].calc_intent(normalised)
-        kw: Optional[str] = match.get("entities", {}).get("keyword")
+        entities = match.get("entities", {})
+        kw: Optional[str] = entities.get("keyword") or next(iter(entities.values()), None)
         if kw:
             LOG.debug(f"DDG infobox intent: {match['name']} keyword={kw!r} conf={match['conf']:.2f}")
             return match["name"], kw

@@ -1,0 +1,5 @@
+what (political party|party) is {person} (in|a member of|affiliated with|)
+what (political party|party) was {person} (in|a member of|affiliated with|)
+{person} political party
+{person} party affiliation
+what party does {person} belong to

@@ -305,6 +305,13 @@ class TestQuery(unittest.TestCase):
             results = self.engine.query("where is Queen Elizabeth II buried", lang="en-us")
         self.assertEqual(results, [("Windsor Castle", 0.9)])
 
+    def test_non_keyword_entity_label_extracted(self):
+        # Intent files may use {person}, {movie}, etc. — code must extract any entity, not just {keyword}
+        self.engine._load_intents()
+        intent, kw = self.engine._match_infobox_intent("who directed The Godfather", "en")
+        self.assertEqual(intent, "director")
+        self.assertEqual(kw.lower(), "the godfather")
+
     def test_infobox_key_spaces_normalised_to_underscores(self):
         # "age at death" from DDG → stored as "age_at_death" in infobox
         self.engine._search = MagicMock(return_value={"Infobox": {"content": [
@@ -597,6 +604,35 @@ _INTENT_CASES = {
         ("when was Newton baptised", "baptised", "Newton"),
         ("who is the father of Darwin", "father", "Darwin"),
         ("who is the mother of Darwin", "mother", "Darwin"),
+        # new intents
+        ("what political party is Biden in", "political_party", "Biden"),
+        ("how old is Elon Musk", "age", "Elon Musk"),
+        ("who directed The Godfather", "director", "The Godfather"),
+        ("who stars in Inception", "starring", "Inception"),
+        ("when was The Godfather released", "released", "The Godfather"),
+        ("what is the running time of Inception", "running_time", "Inception"),
+        ("what was the budget of Avatar", "budget", "Avatar"),
+        ("how much did Titanic make at the box office", "box_office", "Titanic"),
+        ("when was Apple founded", "founded", "Apple"),
+        ("who founded Google", "founders", "Google"),
+        ("what industry is Tesla in", "industry", "Tesla"),
+        ("who is the ceo of Microsoft", "ceo", "Microsoft"),
+        ("who owns Twitter", "owner", "Twitter"),
+        ("who invented the telephone", "inventor", "the telephone"),
+        ("what is Apple revenue", "revenue", "Apple"),
+        ("how tall is LeBron James", "height", "LeBron James"),
+        ("what country is the Eiffel Tower in", "country", "the Eiffel Tower"),
+        ("what is the elevation of Mount Everest", "elevation", "Mount Everest"),
+        ("what is the length of the Amazon River", "length", "the Amazon River"),
+        ("what are Shakespeare other names", "other_names", "Shakespeare"),
+        ("what sport does Serena Williams play", "sport", "Serena Williams"),
+        ("when was Serena Williams active", "years_active", "Serena Williams"),
+        ("who coaches Real Madrid", "coached_by", "Real Madrid"),
+        ("who is Einstein partner", "partner", "Einstein"),
+        ("what is Obama citizenship", "citizenship", "Obama"),
+        ("where is the Eiffel Tower located", "location", "the Eiffel Tower"),
+        ("what license is Linux under", "license", "Linux"),
+        ("who designed the Eiffel Tower", "designed_by", "the Eiffel Tower"),
     ],
     "eu": [
         ("noiz jaio zen Albert Einstein", "born", "Albert Einstein"),
