@@ -1,0 +1,5 @@
+when (did|was) {keyword} (open|opened|completed|built|inaugurated)
+{keyword} opening (date|year)
+{keyword} was (completed|built|opened) when
+when was {keyword} (finished|inaugurated)
+{keyword} completion date

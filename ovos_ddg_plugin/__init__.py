@@ -73,22 +73,47 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
     # DDG labels are normalised to underscores (spaces replaced), so "age at death" → "age_at_death".
     # Aliases are tried in order; first non-None value wins.
     FIELD_ALIASES: Dict[str, List[str]] = {
-        "alma_mater":        ["education"],
-        "resting_place":     ["resting_place", "burial", "burial_place"],
-        "notable_awards":    ["notable_awards", "awards"],
-        "doctoral_students": ["doctoral_students", "other_academic_advisors", "notable_students", "other_notable_students"],
-        "predecessor":       ["predecessor", "preceded_by"],
-        "successor":         ["successor", "succeeded_by"],
-        "notable_work":      ["notable_work", "notable_works", "works"],
-        "movement":          ["movement", "style"],
-        "founders":          ["founders", "founder(s)"],
-        "released":          ["released", "first_appeared"],
-        "founded":           ["founded", "launched"],
-        "other_names":       ["other_names", "other_name(s)", "also_known_as"],
-        "country":           ["country", "countries"],
-        "partner":           ["partner", "partner(s)"],
-        "years_active":      ["years_active", "active"],
-        "designed_by":       ["designed_by", "architect"],
+        # person
+        "alma_mater":          ["education"],
+        "resting_place":       ["resting_place", "burial", "burial_place"],
+        "notable_awards":      ["notable_awards", "awards"],
+        "doctoral_students":   ["doctoral_students", "other_academic_advisors", "notable_students", "other_notable_students"],
+        "predecessor":         ["predecessor", "preceded_by"],
+        "successor":           ["successor", "succeeded_by", "followed_by"],
+        "notable_work":        ["notable_work", "notable_works", "works"],
+        "movement":            ["movement", "style"],
+        "partner":             ["partner", "partner(s)"],
+        "years_active":        ["years_active", "active"],
+        "net_worth":           ["net_worth", "wealth"],
+        "spouse":              ["spouse", "husband", "wife"],
+        "nickname":            ["nickname", "nickname(s)", "nicknames", "also_known_as"],
+        # organization / company
+        "founders":            ["founders", "founder(s)"],
+        "founded":             ["founded", "launched"],
+        "head_coach":          ["head_coach", "coach", "manager"],
+        "stadium":             ["stadium", "arena", "venue", "ground"],
+        "championships":       ["championships", "championship_titles", "titles", "honours"],
+        "number_of_employees": ["number_of_employees", "employees"],
+        "developer":           ["developer", "developers"],
+        "produced_by":         ["produced_by", "producer(s)", "producers"],
+        "written_by":          ["written_by", "writer(s)", "writers", "screenplay"],
+        "publisher":           ["publisher", "publishers"],
+        "label":               ["label", "record_label", "music_label"],
+        "members":             ["members", "band_members", "lineup", "current_members"],
+        "composers":           ["composers", "composer", "music_by"],
+        # geographic
+        "country":             ["country", "countries"],
+        "designed_by":         ["designed_by", "architect"],
+        # works
+        "released":            ["released", "first_appeared", "first_release"],
+        "other_names":         ["other_names", "other_name(s)", "also_known_as", "other names"],
+        "author":              ["author", "written_by"],
+        "genre":               ["genre", "genres", "genre(s)"],
+        "scientific_name":     ["scientific_name", "binomial_name", "latin_name", "taxon_name"],
+        "habitat":             ["habitat", "range", "distribution"],
+        "conservation_status": ["conservation_status", "iucn_status", "status"],
+        "platforms":           ["platforms", "platform(s)", "system_requirements"],
+        "opened":              ["opened", "completed", "inaugurated", "built"],
     }
 
     def _load_intents(self) -> None:
@@ -97,7 +122,8 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
             # person: biography
             "born.intent", "died.intent", "known_for.intent", "age_at_death.intent",
             "resting_place.intent", "baptised.intent", "father.intent", "mother.intent",
-            "children.intent", "partner.intent", "height.intent", "citizenship.intent",
+            "children.intent", "partner.intent", "spouse.intent", "height.intent",
+            "citizenship.intent", "net_worth.intent", "nickname.intent", "age.intent",
             # person: career / academic
             "occupation.intent", "fields.intent", "institutions.intent", "alma_mater.intent",
             "education.intent", "thesis.intent", "doctoral_students.intent",
@@ -107,18 +133,30 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
             "sport.intent", "coached_by.intent",
             # person: politics
             "political_party.intent", "predecessor.intent", "successor.intent",
-            # person: age / demographics
-            "age.intent",
-            # film
+            # film / media
             "director.intent", "starring.intent", "released.intent", "running_time.intent",
-            "budget.intent", "box_office.intent",
-            # company / organization
+            "budget.intent", "box_office.intent", "produced_by.intent", "written_by.intent",
+            # book / literature
+            "author.intent", "publisher.intent", "genre.intent", "language.intent",
+            "original_title.intent",
+            # music
+            "label.intent", "members.intent", "composers.intent",
+            # game / software
+            "developer.intent", "platforms.intent", "license.intent",
+            # sports team / organization / company
             "founded.intent", "founders.intent", "industry.intent", "ceo.intent",
-            "owner.intent", "revenue.intent",
-            # geography
+            "owner.intent", "revenue.intent", "head_coach.intent", "stadium.intent",
+            "championships.intent", "number_of_employees.intent", "headquarters.intent",
+            # geography / place
             "country.intent", "location.intent", "elevation.intent", "length.intent",
+            "capital.intent", "population.intent", "area.intent",
+            # buildings / structures
+            "opened.intent", "designed_by.intent",
+            # biology / nature
+            "scientific_name.intent", "habitat.intent", "diet.intent",
+            "conservation_status.intent",
             # generic
-            "other_names.intent", "inventor.intent", "license.intent", "designed_by.intent",
+            "other_names.intent", "inventor.intent",
         ]
         locale_dir = os.path.join(os.path.dirname(__file__), "locale")
         if not os.path.isdir(locale_dir):
@@ -134,8 +172,10 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
                         if not line.strip() or line.startswith("#"):
                             continue
                         # Normalise possessive 's in training samples to match normalised queries.
-                        line = line.replace("'s ", " ").replace("'s ", " ")
-                        samples += expand_parentheses(line) if "(" in line else [line]
+                        line = line.replace("'s ", " ").replace("\u2019s ", " ")
+                        expanded = expand_parentheses(line) if "(" in line else [line]
+                        # Collapse any double-spaces produced by empty alternatives like (word|).
+                        samples += [" ".join(s.split()) for s in expanded]
                 self._register_intent(fn.removesuffix(".intent"), samples, lang)
 
     def _register_intent(self, key: str, samples: List[str], lang: str) -> None:

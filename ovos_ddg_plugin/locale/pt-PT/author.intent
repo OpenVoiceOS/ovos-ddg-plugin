@@ -1,0 +1,3 @@
+quem (escreveu|é o autor de) {book}
+{book} autor
+quem é o autor de {book}

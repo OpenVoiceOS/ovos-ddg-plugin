@@ -2,3 +2,12 @@ what is the elevation of {mountain}
 how high is {mountain}
 {mountain} elevation
 {mountain} altitude
+how tall is {mountain}
+what is {mountain} (height|altitude|elevation)
+{mountain} is how (high|tall)
+tell me the elevation of {mountain}
+{mountain} peak (height|elevation|altitude)
+how many (meters|feet) high is {mountain}
+what (elevation|altitude) does {mountain} reach
+at what elevation is {mountain}
+{mountain} (summit|top) elevation

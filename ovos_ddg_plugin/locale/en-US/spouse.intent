@@ -1,0 +1,5 @@
+who is {person} (spouse|husband|wife|married to)
+{person} (spouse|husband|wife)
+who did {person} marry
+{person} is married to who
+who was {person} married to

@@ -1,6 +1,14 @@
-where did {keyword} work
-where did {keyword} teach
-what institutions was {keyword} affiliated with
-what (university|college|institution) did {keyword} work at
-where did {keyword} conduct (his|her|their) research
-{keyword} affiliated institutions
+where did {person} work
+where did {person} teach
+what institutions was {person} affiliated with
+what (university|college|institution) did {person} work at
+where did {person} conduct (his|her|their) research
+{person} affiliated institutions
+what (organization|organizations) was {person} (a member of|associated with|part of)
+where has {person} been employed
+{person} workplace
+what institutions (employed|hired) {person}
+what labs or universities did {person} work at
+{person} academic (positions|posts)
+which institutions does {person} belong to
+where (has|did) {person} (hold|held) a position

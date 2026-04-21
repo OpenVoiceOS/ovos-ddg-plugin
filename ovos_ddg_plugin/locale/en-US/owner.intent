@@ -1,3 +1,12 @@
 who owns {keyword}
 {keyword} owner
 who is the owner of {keyword}
+who (controls|possesses|holds) {keyword}
+{keyword} is owned by who
+tell me who owns {keyword}
+{keyword} ownership
+who is (behind|running|in charge of) {keyword}
+which (person|company|entity) owns {keyword}
+{keyword} (belongs to|is the property of) who
+who is the (current|) owner of {keyword}
+who has ownership of {keyword}

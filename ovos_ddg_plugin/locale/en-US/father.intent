@@ -1,5 +1,13 @@
-who is {keyword}'s father
-who was {keyword}'s father
-who is the father of {keyword}
-{keyword}'s (dad|father|old man)
-what is the name of {keyword}'s father
+who is {person} father
+who was {person} father
+who is the father of {person}
+{person} (dad|father|old man)
+what is the name of {person} father
+{person} paternal (parent|lineage)
+tell me who {person} father is
+what (man|person) fathered {person}
+who raised {person} as (his|her|their) (dad|father)
+{person} father name
+who is {person} (biological|) father
+{person} (pa|pop|daddy|dad|father)
+what was {person} father name

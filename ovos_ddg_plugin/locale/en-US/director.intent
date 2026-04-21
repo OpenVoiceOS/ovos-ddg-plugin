@@ -2,3 +2,11 @@ who directed {movie}
 who is the director of {movie}
 {movie} director
 {movie} was directed by who
+who made {movie}
+tell me who directed {movie}
+which (director|filmmaker) made {movie}
+who was behind the camera for {movie}
+{movie} was (made|directed) by who
+who (helmed|filmed|shot) {movie}
+{movie} film director
+what (person|director) directed {movie}

@@ -2,3 +2,11 @@ how old is {person}
 what is {person} age
 {person} current age
 how old was {person}
+{person} age
+what (age|year) is {person}
+how many years old is {person}
+tell me {person} age
+{person} is how old
+what is the age of {person}
+how old (is|was) {person} now
+{person} years old

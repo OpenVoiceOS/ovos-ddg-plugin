@@ -2,3 +2,12 @@ when was {organization} founded
 when did {organization} start
 {organization} founding date
 when was {organization} established
+what year was {organization} (founded|started|created|established)
+{organization} (founding|establishment) (date|year)
+when (did|was) {organization} (come into existence|begin|start)
+tell me when {organization} was founded
+in what year was {organization} founded
+{organization} was founded (when|in what year)
+how old is {organization}
+{organization} creation date
+when did {organization} begin (operating|existing|)

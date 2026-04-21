@@ -1,3 +1,12 @@
 how tall is {person}
 what is {person} height
 {person} height
+how (tall|high) is {person}
+what (height|stature) does {person} have
+{person} (tall|stature|size)
+tell me {person} height
+{person} is how tall
+how many (feet|centimeters|inches|meters) tall is {person}
+what (is|was) the height of {person}
+{person} (physical|body) height
+is {person} (tall|short|average height)

@@ -1,0 +1,7 @@
+what (stadium|arena|ground|venue) does {team} (play in|play at|use|play)
+what (stadium|arena|ground|venue) does {team} call home
+where does {team} play (home games|)
+{team} stadium
+{team} (home |)arena
+{team} (home |)ground
+where is {team} home

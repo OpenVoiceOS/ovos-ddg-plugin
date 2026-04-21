@@ -1,5 +1,13 @@
-who is {keyword}'s mother
-who was {keyword}'s mother
-who is the mother of {keyword}
-{keyword}'s (mom|mother|mum)
-what is the name of {keyword}'s mother
+who is {person} mother
+who was {person} mother
+who is the mother of {person}
+{person} (mom|mother|mum)
+what is the name of {person} mother
+{person} maternal (parent|lineage)
+tell me who {person} mother is
+who gave birth to {person}
+{person} mother name
+who is {person} (biological|) mother
+{person} (mama|mum|mom|mummy|mother)
+what was {person} mother name
+who is {person} (mum|mom)

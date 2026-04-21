@@ -1,3 +1,12 @@
 who is {person} partner
 {person} partner
 {person} life partner
+who is {person} (romantic|life) partner
+{person} (romantic|life|business) partner
+is {person} (married|in a relationship)
+who (is|was) {person} (with|partnered with)
+tell me {person} partner
+{person} (significant other|companion|mate)
+who does {person} share (his|her|their) life with
+who is {person} currently (with|married to|partnered with)
+{person} relationship (partner|status|)

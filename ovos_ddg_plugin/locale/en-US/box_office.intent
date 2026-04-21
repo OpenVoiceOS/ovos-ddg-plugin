@@ -2,3 +2,11 @@ how much did {movie} make at the box office
 {movie} box office
 {movie} gross earnings
 how much money did {movie} earn
+{movie} box office (total|gross|revenue|earnings)
+what were {movie} box office (numbers|results|returns)
+how profitable was {movie}
+{movie} total (gross|earnings|revenue)
+tell me {movie} box office earnings
+how much (did|has) {movie} (grossed|earned|made)
+{movie} worldwide (gross|earnings)
+what (revenue|income) did {movie} generate
