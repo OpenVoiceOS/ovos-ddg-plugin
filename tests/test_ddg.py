@@ -11,6 +11,8 @@ from ovos_ddg_solver import (
     DuckDuckGoToolbox,
     SearchDuckDuckGoArgs,
     SearchDuckDuckGoOutput,
+    DDGImageArgs,
+    DDGImageOutput,
 )
 
 
@@ -156,6 +158,34 @@ class TestQuery(unittest.TestCase):
 
 
 # ---------------------------------------------------------------------------
+# get_image
+# ---------------------------------------------------------------------------
+
+class TestGetImage(unittest.TestCase):
+
+    def setUp(self):
+        self.engine = _make_engine()
+
+    def test_returns_full_url(self):
+        self.engine._search = MagicMock(return_value={"Image": "https://duckduckgo.com/i/abc.jpg"})
+        with patch("ovos_ddg_solver.Configuration", return_value={}):
+            result = self.engine.get_image("Newton", lang="en-us")
+        self.assertEqual(result, "https://duckduckgo.com/i/abc.jpg")
+
+    def test_prepends_ddg_domain_for_relative_url(self):
+        self.engine._search = MagicMock(return_value={"Image": "/i/abc.jpg"})
+        with patch("ovos_ddg_solver.Configuration", return_value={}):
+            result = self.engine.get_image("Newton", lang="en-us")
+        self.assertEqual(result, "https://duckduckgo.com/i/abc.jpg")
+
+    def test_returns_none_when_no_image(self):
+        self.engine._search = MagicMock(return_value={"AbstractText": "Some text."})
+        with patch("ovos_ddg_solver.Configuration", return_value={}):
+            result = self.engine.get_image("Newton", lang="en-us")
+        self.assertIsNone(result)
+
+
+# ---------------------------------------------------------------------------
 # Intent matching
 # ---------------------------------------------------------------------------
 
@@ -186,11 +216,10 @@ class TestDuckDuckGoToolbox(unittest.TestCase):
         with patch("ovos_ddg_solver.DuckDuckGoRetrievalEngine"):
             return DuckDuckGoToolbox(config={})
 
-    def test_discover_tools_returns_one_tool(self):
+    def test_discover_tools_search_tool_exists(self):
         tb = self._make_toolbox()
         tools = tb.discover_tools()
-        self.assertEqual(len(tools), 1)
-        self.assertEqual(tools[0].name, "search_duckduckgo")
+        self.assertTrue(any(t.name == "search_duckduckgo" for t in tools))
 
     def test_search_ddg_returns_output(self):
         tb = self._make_toolbox()
@@ -208,6 +237,31 @@ class TestDuckDuckGoToolbox(unittest.TestCase):
         args = SearchDuckDuckGoArgs(query="xyzzy", lang="en-us")
         result = tb.search_ddg(args)
         self.assertEqual(result.result, "")
+
+    def test_ddg_image_returns_url(self):
+        tb = self._make_toolbox()
+        tb._engine = MagicMock()
+        tb._engine.get_image.return_value = "https://duckduckgo.com/i/abc.jpg"
+        args = DDGImageArgs(query="Newton", lang="en-us")
+        result = tb.ddg_image(args)
+        self.assertIsInstance(result, DDGImageOutput)
+        self.assertEqual(result.url, "https://duckduckgo.com/i/abc.jpg")
+
+    def test_ddg_image_returns_none_when_no_image(self):
+        tb = self._make_toolbox()
+        tb._engine = MagicMock()
+        tb._engine.get_image.return_value = None
+        args = DDGImageArgs(query="xyzzy", lang="en-us")
+        result = tb.ddg_image(args)
+        self.assertIsNone(result.url)
+
+    def test_discover_tools_returns_two_tools(self):
+        tb = self._make_toolbox()
+        tools = tb.discover_tools()
+        self.assertEqual(len(tools), 2)
+        names = {t.name for t in tools}
+        self.assertIn("search_duckduckgo", names)
+        self.assertIn("duckduckgo_image", names)
 
     def test_toolbox_id(self):
         self.assertEqual(DuckDuckGoToolbox.toolbox_id, "ovos-ddg-tools")

@@ -136,6 +136,17 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
                 return self._fetch(kw, lang)
         return {}
 
+    def get_image(self, query: str, lang: Optional[str] = None) -> Optional[str]:
+        """Return an image URL for the query, or None if DDG has no image."""
+        lang = lang or Configuration().get("lang", "en-us")
+        data = self._search(query, lang)
+        image = data.get("Image")
+        if not image:
+            return None
+        if image.startswith("/"):
+            image = "https://duckduckgo.com" + image
+        return image
+
     def get_infobox(self, query: str, lang: Optional[str] = None) -> Tuple[Dict[str, Any], List[str]]:
         """Return (infobox_dict, related_topics) for a query."""
         lang = lang or Configuration().get("lang", "en-us")
@@ -175,6 +186,15 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
         return []
 
 
+class DDGImageArgs(ToolArguments):
+    query: str = Field(..., description="Topic or entity to fetch an image for (e.g. 'Stephen Hawking', 'Eiffel Tower').")
+    lang: str = Field("en-us", description="BCP-47 language code for the locale.")
+
+
+class DDGImageOutput(ToolOutput):
+    url: Optional[str] = Field(None, description="Image URL from DuckDuckGo, or null if none available.")
+
+
 class SearchDuckDuckGoArgs(ToolArguments):
     query: str = Field(..., description="The natural language query to look up on DuckDuckGo. Convert conversational phrasing to concise keywords (e.g. 'Stephen Hawking birthdate' not 'when was Stephen Hawking born').")
     lang: str = Field("en-us", description="BCP-47 language code for the response locale (e.g. 'en-us', 'de-de', 'pt-pt').")
@@ -196,6 +216,9 @@ class DuckDuckGoToolbox(ToolBox):
         results = self._engine.query(args.query, lang=args.lang, k=1)
         return SearchDuckDuckGoOutput(result=results[0][0] if results else "")
 
+    def ddg_image(self, args: DDGImageArgs) -> DDGImageOutput:
+        return DDGImageOutput(url=self._engine.get_image(args.query, lang=args.lang))
+
     def discover_tools(self) -> List[AgentTool]:
         return [
             AgentTool(
@@ -208,7 +231,14 @@ class DuckDuckGoToolbox(ToolBox):
                 argument_schema=SearchDuckDuckGoArgs,
                 output_schema=SearchDuckDuckGoOutput,
                 tool_call=self.search_ddg,
-            )
+            ),
+            AgentTool(
+                name="duckduckgo_image",
+                description="Fetch an image URL for a topic or entity from DuckDuckGo.",
+                argument_schema=DDGImageArgs,
+                output_schema=DDGImageOutput,
+                tool_call=self.ddg_image,
+            ),
         ]
 
 
