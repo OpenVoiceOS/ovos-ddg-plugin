@@ -1,2 +1,8 @@
-quen (compuxo|escribiu) a (música|banda sonora) de {keyword}
-{keyword} compositor
+quen (compuxo|escribiu) a (música|banda sonora) de {movie}
+{movie} compositor
+quen é o compositor de {movie}
+quen fixo a banda sonora de {movie}
+cal é o autor da música de {movie}
+quen compuxo a trilha sonora de {movie}
+{movie} banda sonora compositor
+quen creou a música para {movie}

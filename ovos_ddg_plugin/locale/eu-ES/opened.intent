@@ -1,3 +1,7 @@
-noiz (inauguratu|ireki|eraiki|bukatu) zen {keyword}
-{keyword} inaugurazioa
-{keyword} irekiera data
+noiz (inauguratu|ireki|eraiki|bukatu) zen {place}
+{place} inaugurazioa
+{place} irekiera data
+noiz zabaldu zen {place}
+{place} noiz inauguratu zen
+{place} eraikuntza data
+zein urtetan ireki zen {place}

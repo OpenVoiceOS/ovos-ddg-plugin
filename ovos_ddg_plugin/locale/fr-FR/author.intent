@@ -1,3 +1,7 @@
 qui a (écrit|rédigé) {book}
 qui est l auteur de {book}
 {book} auteur
+qui est derrière {book}
+{book} écrit par qui
+quel écrivain a écrit {book}
+{book} signé par qui

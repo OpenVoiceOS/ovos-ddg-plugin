@@ -1,6 +1,6 @@
-qual é a obra mais (famosa|conhecida|importante) de {keyword}
-qual é o trabalho mais notável de {keyword}
-o que (criou|escreveu|compôs) {keyword}
-qual é a maior (obra|criação) de {keyword}
-{keyword} obra (mais famosa|mais importante|mais conhecida)
-por que (obra|criação) é conhecido {keyword}
+qual é a obra mais (famosa|conhecida|importante) de {person}
+qual é o trabalho mais notável de {person}
+o que (criou|escreveu|compôs) {person}
+qual é a maior (obra|criação) de {person}
+{person} obra (mais famosa|mais importante|mais conhecida)
+por que (obra|criação) é conhecido {person}

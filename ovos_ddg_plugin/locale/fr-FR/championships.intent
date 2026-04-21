@@ -1,3 +1,8 @@
 combien de (championnats|titres|trophées) {team} a remporté
 {team} championnats
 {team} palmarès
+combien de titres a gagné {team}
+{team} nombre de championnats
+quels titres a remporté {team}
+combien de fois {team} a été champion
+{team} victoires au championnat

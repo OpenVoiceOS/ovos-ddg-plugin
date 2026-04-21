@@ -1,3 +1,7 @@
-nork argitaratu zuen {keyword}
-{keyword} argitaletxea
-zein argitaletxek argitaratu zuen {keyword}
+nork argitaratu zuen {book}
+{book} argitaletxea
+zein argitaletxek argitaratu zuen {book}
+nor da {book} argitaletxea
+{book} nork plazaratu zuen
+{book} argitalpen etxea
+zein enpresak kaleratzen du {book}

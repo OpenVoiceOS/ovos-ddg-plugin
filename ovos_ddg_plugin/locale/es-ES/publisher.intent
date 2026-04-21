@@ -1,3 +1,7 @@
-quién publicó {keyword}
-{keyword} editorial
-qué editorial publicó {keyword}
+quién publicó {book}
+{book} editorial
+qué editorial publicó {book}
+cuál es la editorial de {book}
+quién editó {book}
+por qué editorial fue publicado {book}
+{book} publicado por quién

@@ -1,3 +1,6 @@
-welches genre ist {keyword}
-{keyword} genre
-was für ein genre hat {keyword}
+welches genre ist {movie}
+{movie} genre
+was für ein genre hat {movie}
+welcher filmgenre ist {movie}
+{movie} gehört zu welchem genre
+welche art von film ist {movie}

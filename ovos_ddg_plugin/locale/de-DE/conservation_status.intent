@@ -1,3 +1,6 @@
-ist {animal} (gefährdet|bedroht|ausgestorben|)
+ist {animal} (gefährdet|bedroht|ausgestorben)
 was ist {animal} schutzstatus
 {animal} schutzstatus
+wie ist der bedrohungsstatus von {animal}
+steht {animal} auf der roten liste
+{animal} rote liste status

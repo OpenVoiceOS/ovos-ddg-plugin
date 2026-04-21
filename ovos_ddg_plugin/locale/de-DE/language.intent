@@ -1,3 +1,6 @@
-in welcher sprache ist {keyword} (geschrieben|)
-{keyword} sprache
-{keyword} originalsprache
+in welcher sprache ist {book} (geschrieben|)
+{book} sprache
+{book} originalsprache
+in welcher sprache wurde {book} verfasst
+welche sprache hat {book}
+in welcher originalsprache erschien {book}

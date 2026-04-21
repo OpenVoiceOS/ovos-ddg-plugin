@@ -1,3 +1,8 @@
-{animal} è (in pericolo|minacciato|estinto|)
+{animal} è (in pericolo|minacciato|estinto)
 quale è lo stato di conservazione di {animal}
 {animal} stato di conservazione
+{animal} è una specie protetta
+{animal} rischio estinzione
+quale è la categoria IUCN di {animal}
+{animal} è in via d estinzione
+{animal} stato di rischio

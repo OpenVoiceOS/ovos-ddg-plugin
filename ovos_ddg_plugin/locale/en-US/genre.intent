@@ -1,5 +1,5 @@
-what genre is {keyword}
-what (type|kind) of (music|film|book|game|) is {keyword}
-{keyword} genre
-what genre does {keyword} belong to
-what style is {keyword}
+what genre is {movie}
+what (type|kind) of (music|film|book|game|) is {movie}
+{movie} genre
+what genre does {movie} belong to
+what style is {movie}

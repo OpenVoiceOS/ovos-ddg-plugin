@@ -1,3 +1,8 @@
 qui va (escriure|és l autor de) {book}
 {book} autor
 qui és l autor de {book}
+qui va redactar {book}
+{book} escrit per qui
+quin escriptor va fer {book}
+{book} autoria
+qui és el creador de {book}

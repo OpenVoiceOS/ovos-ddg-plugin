@@ -1,6 +1,6 @@
-was ist {keyword}s bekanntestes Werk
-was ist das berühmteste Werk von {keyword}
-was hat {keyword} (erschaffen|geschrieben|komponiert)
-welches ist {keyword}s wichtigstes (Werk|Schaffen)
-wofür ist {keyword} als (Schöpfer|Autor|Künstler) bekannt
-{keyword} bekanntestes (Werk|Meisterwerk|Schöpfung)
+was ist {person}s bekanntestes Werk
+was ist das berühmteste Werk von {person}
+was hat {person} (erschaffen|geschrieben|komponiert)
+welches ist {person}s wichtigstes (Werk|Schaffen)
+wofür ist {person} als (Schöpfer|Autor|Künstler) bekannt
+{person} bekanntestes (Werk|Meisterwerk|Schöpfung)

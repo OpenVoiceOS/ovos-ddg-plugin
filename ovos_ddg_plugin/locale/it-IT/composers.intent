@@ -1,2 +1,8 @@
-chi ha (composto|scritto) la (musica|colonna sonora) di {keyword}
-{keyword} compositore
+chi ha (composto|scritto) la (musica|colonna sonora) di {movie}
+{movie} compositore
+chi è il compositore della colonna sonora di {movie}
+chi ha scritto la musica per {movie}
+{movie} colonna sonora compositore
+chi ha composto la musica del film {movie}
+qual è il compositore di {movie}
+{movie} musica originale

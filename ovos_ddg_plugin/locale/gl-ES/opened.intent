@@ -1,3 +1,8 @@
-cando foi (inaugurado|aberto|construído|completado) {keyword}
-{keyword} data de inauguración
-{keyword} ano de apertura
+cando foi (inaugurado|aberto|construído|completado) {place}
+{place} data de inauguración
+{place} ano de apertura
+en que ano abriu {place}
+cando se inaugurou {place}
+cal é a data de apertura de {place}
+cando empezou a funcionar {place}
+{place} cando foi construído

@@ -1,3 +1,7 @@
-cuál es el nombre (científico|latino) de {keyword}
-{keyword} nombre científico
-{keyword} nombre latino
+cuál es el nombre (científico|latino) de {animal}
+{animal} nombre científico
+{animal} nombre latino
+cuál es la denominación científica de {animal}
+cómo se llama {animal} en latín
+{animal} nombre en taxonomía
+cuál es el nombre taxonómico de {animal}

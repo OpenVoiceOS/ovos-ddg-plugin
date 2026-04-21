@@ -1,3 +1,6 @@
 wer hat das (drehbuch|skript) zu {movie} (geschrieben|verfasst)
 {movie} drehbuchautor
 {movie} skript geschrieben von wem
+von wem stammt das drehbuch zu {movie}
+wer hat das skript für {movie} verfasst
+{movie} wurde von wem geschrieben

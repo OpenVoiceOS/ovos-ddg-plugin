@@ -1,3 +1,8 @@
-{animal} está (en perigo|ameazado|extinto|)
+{animal} está (en perigo|ameazado|extinto)
 cal é o estado de conservación de {animal}
 {animal} estado de conservación
+está {animal} en perigo de extinción
+cal é o nivel de ameaza de {animal}
+{animal} especie ameazada
+como de ameazado está {animal}
+que protección ten {animal}

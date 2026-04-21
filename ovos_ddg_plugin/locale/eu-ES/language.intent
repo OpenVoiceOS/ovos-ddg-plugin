@@ -1,3 +1,7 @@
-zein hizkuntzatan idatzita dago {keyword}
-{keyword} hizkuntza
-{keyword} jatorrizko hizkuntza
+zein hizkuntzatan idatzita dago {book}
+{book} hizkuntza
+{book} jatorrizko hizkuntza
+zein hizkuntzatan dago {book}
+{book} zer hizkuntzatan dago idatzita
+{book} jatorrizko testua zein hizkuntzatan
+{book} hizkuntza ofiziala

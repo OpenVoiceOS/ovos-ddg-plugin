@@ -1,3 +1,8 @@
 quantos (campeonatos|títulos|troféus) {team} ganhou
 {team} campeonatos
 {team} títulos
+quantas vezes {team} foi campeão
+{team} palmarés
+quantos títulos tem {team}
+{team} conquistas desportivas
+qual é o número de campeonatos de {team}

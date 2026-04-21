@@ -1,2 +1,7 @@
-hvem (komponerede|wrote) (musikken|soundtracket) til {keyword}
-{keyword} komponist
+hvem (komponerede|wrote) (musikken|soundtracket) til {movie}
+{movie} komponist
+hvem lavede musikken til {movie}
+hvem stod for soundtracket til {movie}
+hvem komponerede filmmusikken til {movie}
+{movie} filmmusik komponist
+hvem er komponisten bag {movie}

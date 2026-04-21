@@ -1,3 +1,8 @@
-{animal} està (en perill|amenaçat|extint|)
+{animal} està (en perill|amenaçat|extint)
 quin és l estat de conservació de {animal}
 {animal} estat de conservació
+{animal} en perill d extinció
+està protegit {animal}
+{animal} és una espècie amenaçada
+quin risc d extinció té {animal}
+{animal} nivell de protecció

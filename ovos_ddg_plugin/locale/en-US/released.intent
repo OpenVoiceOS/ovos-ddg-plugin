@@ -1,12 +1,12 @@
-when was {keyword} released
-when did {keyword} come out
-{keyword} release date
-{keyword} release year
-when was {keyword} first released
-{keyword} (came out|launched|published) when
-what (year|date) did {keyword} (come out|release|drop)
-when (did|was) {keyword} (first|) published
-tell me {keyword} release date
-{keyword} (publication|launch|release) (date|year)
-when (was|did) {keyword} (come out|get released)
-what (year|date) was {keyword} released
+when was {movie} released
+when did {movie} come out
+{movie} release date
+{movie} release year
+when was {movie} first released
+{movie} (came out|launched|published) when
+what (year|date) did {movie} (come out|release|drop)
+when (did|was) {movie} (first|) published
+tell me {movie} release date
+{movie} (publication|launch|release) (date|year)
+when (was|did) {movie} (come out|get released)
+what (year|date) was {movie} released

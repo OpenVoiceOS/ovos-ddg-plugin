@@ -1,6 +1,6 @@
-quels prix {keyword} a-t-il (remportés|reçus)
-quels prix {keyword} a-t-elle (remportés|reçus)
-quelles distinctions {keyword} a-t-il reçues
-quelles récompenses a reçues {keyword}
-{keyword} (prix et distinctions|récompenses)
-quels honneurs ont été décernés à {keyword}
+quels prix {person} a-t-il (remportés|reçus)
+quels prix {person} a-t-elle (remportés|reçus)
+quelles distinctions {person} a-t-il reçues
+quelles récompenses a reçues {person}
+{person} (prix et distinctions|récompenses)
+quels honneurs ont été décernés à {person}

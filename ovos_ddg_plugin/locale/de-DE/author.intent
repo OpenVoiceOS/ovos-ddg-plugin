@@ -1,3 +1,6 @@
 wer hat {book} (geschrieben|verfasst)
 {book} autor
 wer ist der autor von {book}
+von wem stammt {book}
+wer hat {book} verfasst
+{book} wurde von wem geschrieben

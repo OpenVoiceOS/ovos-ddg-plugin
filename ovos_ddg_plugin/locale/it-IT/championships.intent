@@ -1,3 +1,8 @@
 quanti (campionati|titoli|trofei) ha vinto {team}
 {team} campionati
 {team} titoli
+quante volte ha vinto il campionato {team}
+{team} palmares
+{team} quanti scudetti ha
+quanti trofei ha conquistato {team}
+{team} vittorie in campionato

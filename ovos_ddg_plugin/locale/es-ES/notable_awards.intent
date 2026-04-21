@@ -1,6 +1,6 @@
-qué premios (ganó|recibió) {keyword}
-qué (galardones|distinciones) obtuvo {keyword}
-cuáles son los premios de {keyword}
-ganó {keyword} algún premio
-{keyword} (premios|reconocimientos|galardones)
-qué honores recibió {keyword}
+qué premios (ganó|recibió) {person}
+qué (galardones|distinciones) obtuvo {person}
+cuáles son los premios de {person}
+ganó {person} algún premio
+{person} (premios|reconocimientos|galardones)
+qué honores recibió {person}

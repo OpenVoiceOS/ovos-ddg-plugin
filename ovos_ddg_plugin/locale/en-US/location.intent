@@ -1,12 +1,12 @@
-where is {keyword} located
-{keyword} location
-where is {keyword} situated
-where can (i|you) find {keyword}
-{keyword} (address|whereabouts|location)
-in what (city|country|region|state) is {keyword}
-{keyword} is where
-tell me where {keyword} is
-{keyword} (place|position|coordinates)
-what is the location of {keyword}
-where exactly is {keyword}
-{keyword} (geographical|physical) location
+where is {place} located
+{place} location
+where is {place} situated
+where can (i|you) find {place}
+{place} (address|whereabouts|location)
+in what (city|country|region|state) is {place}
+{place} is where
+tell me where {place} is
+{place} (place|position|coordinates)
+what is the location of {place}
+where exactly is {place}
+{place} (geographical|physical) location

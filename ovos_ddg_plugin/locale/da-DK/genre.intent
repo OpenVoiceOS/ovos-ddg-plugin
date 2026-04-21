@@ -1,3 +1,7 @@
-hvilket genre er {keyword}
-{keyword} genre
-hvilken slags er {keyword}
+hvilket genre er {movie}
+{movie} genre
+hvilken slags er {movie}
+hvad er {movie} genre
+hvilken kategori tilhører {movie}
+{movie} filmtype
+inden for hvilket genre falder {movie}

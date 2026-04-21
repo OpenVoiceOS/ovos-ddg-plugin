@@ -1,5 +1,5 @@
-quins premis va (guanyar|rebre) {keyword}
-quins (guardons|distincions) va obtenir {keyword}
-{keyword} va guanyar algun premi
-{keyword} (premis|reconeixements|guardons)
-quins honors va rebre {keyword}
+quins premis va (guanyar|rebre) {person}
+quins (guardons|distincions) va obtenir {person}
+{person} va guanyar algun premi
+{person} (premis|reconeixements|guardons)
+quins honors va rebre {person}

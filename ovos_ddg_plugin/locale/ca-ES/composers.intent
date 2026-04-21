@@ -1,2 +1,8 @@
-qui va (compondre|escriure) la (música|banda sonora) de {keyword}
-{keyword} compositor
+qui va (compondre|escriure) la (música|banda sonora) de {movie}
+{movie} compositor
+qui és el compositor de {movie}
+{movie} banda sonora compositor
+qui va fer la música de {movie}
+quina és la banda sonora de {movie}
+{movie} música original
+qui va compondre la partitura de {movie}

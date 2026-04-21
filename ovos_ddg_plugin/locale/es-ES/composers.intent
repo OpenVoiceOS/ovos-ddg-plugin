@@ -1,2 +1,7 @@
-quién (compuso|escribió) la (música|banda sonora) de {keyword}
-{keyword} compositor
+quién (compuso|escribió) la (música|banda sonora) de {movie}
+{movie} compositor
+quién es el compositor de la banda sonora de {movie}
+{movie} banda sonora
+quién hizo la música de {movie}
+quién compuso la partitura de {movie}
+{movie} música compuesta por quién

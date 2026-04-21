@@ -1,5 +1,5 @@
-que prémios (ganhou|recebeu) {keyword}
-que (galardões|distinções) obteve {keyword}
-quais são os prémios de {keyword}
-{keyword} (prémios|reconhecimentos|galardões)
-que honras recebeu {keyword}
+que prémios (ganhou|recebeu) {person}
+que (galardões|distinções) obteve {person}
+quais são os prémios de {person}
+{person} (prémios|reconhecimentos|galardões)
+que honras recebeu {person}

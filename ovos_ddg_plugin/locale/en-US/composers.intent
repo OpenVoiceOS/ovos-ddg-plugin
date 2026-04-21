@@ -1,4 +1,4 @@
-who (composed|wrote) the (music|score|soundtrack) (of|for) {keyword}
-{keyword} (music|score|soundtrack) composer
-who is the composer of {keyword}
-{keyword} composed by who
+who (composed|wrote) the (music|score|soundtrack) (of|for) {movie}
+{movie} (music|score|soundtrack) composer
+who is the composer of {movie}
+{movie} composed by who

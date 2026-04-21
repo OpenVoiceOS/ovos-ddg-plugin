@@ -1,3 +1,8 @@
 quem (escreveu|é o autor de) {book}
 {book} autor
 quem é o autor de {book}
+quem redigiu {book}
+{book} foi escrito por quem
+qual é o autor de {book}
+quem assina {book}
+{book} autoria

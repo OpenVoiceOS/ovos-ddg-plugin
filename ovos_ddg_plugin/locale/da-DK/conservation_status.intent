@@ -1,3 +1,8 @@
-er {animal} (truet|udrydningstruet|uddød|)
+er {animal} (truet|udrydningstruet|uddød)
 hvad er {animal} bevaringsstatus
 {animal} bevaringsstatus
+er {animal} på rødlisten
+hvor truet er {animal}
+{animal} trusselsstatus
+er {animal} i fare for udryddelse
+hvad er trusselsniveauet for {animal}

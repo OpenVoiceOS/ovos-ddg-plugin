@@ -1,3 +1,8 @@
-quan va ser (inaugurat|obert|construït|completat) {keyword}
-{keyword} data d inauguració
-{keyword} any d obertura
+quan va ser (inaugurat|obert|construït|completat) {place}
+{place} data d inauguració
+{place} any d obertura
+quan es va obrir {place}
+{place} quan va obrir les portes
+en quin any va ser inaugurat {place}
+{place} data d obertura
+quan va ser construït {place}

@@ -1,3 +1,8 @@
-está {animal} (en peligro|amenazado|extinto|)
+está {animal} (en peligro|amenazado|extinto)
 cuál es el estado de conservación de {animal}
 {animal} estado de conservación
+está {animal} en peligro de extinción
+{animal} especie amenazada
+cómo está clasificado {animal} según la UICN
+{animal} en la lista roja
+cuál es el nivel de amenaza de {animal}

@@ -1,3 +1,8 @@
 a que (gravadora|selo|editora musical) pertence {artist}
 {artist} gravadora
 {artist} selo musical
+qual é a gravadora de {artist}
+em que editora está {artist}
+{artist} editora discográfica
+por que gravadora é {artist} editado
+qual o selo discográfico de {artist}

@@ -1,3 +1,7 @@
-hvornår blev {keyword} (åbnet|indviet|bygget|færdiggjort)
-{keyword} åbningsdato
-{keyword} indvielsesdato
+hvornår blev {place} (åbnet|indviet|bygget|færdiggjort)
+{place} åbningsdato
+{place} indvielsesdato
+hvornår åbnede {place}
+i hvilket år blev {place} indviet
+hvornår stod {place} færdig
+{place} åbningsår

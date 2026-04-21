@@ -1,12 +1,12 @@
-what is the length of {keyword}
-{keyword} length
-how long is {keyword}
-{keyword} (size|dimensions|extent)
-what (length|size) does {keyword} have
-tell me the length of {keyword}
-{keyword} total length
-{keyword} is how long
-how many (meters|kilometers|miles|feet) long is {keyword}
-{keyword} (measurement|distance|span)
-what is {keyword} (total|) (length|extent|size)
-how far does {keyword} stretch
+what is the length of {place}
+{place} length
+how long is {place}
+{place} (size|dimensions|extent)
+what (length|size) does {place} have
+tell me the length of {place}
+{place} total length
+{place} is how long
+how many (meters|kilometers|miles|feet) long is {place}
+{place} (measurement|distance|span)
+what is {place} (total|) (length|extent|size)
+how far does {place} stretch

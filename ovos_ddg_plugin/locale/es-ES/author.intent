@@ -1,3 +1,8 @@
 quién (escribió|es el autor de) {book}
 {book} autor
 quién es el autor de {book}
+quién redactó {book}
+{book} escrito por quién
+quién firmó {book}
+de quién es el libro {book}
+cuál es el autor de {book}

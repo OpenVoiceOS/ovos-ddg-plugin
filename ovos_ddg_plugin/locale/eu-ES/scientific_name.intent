@@ -1,3 +1,7 @@
-zein da {keyword} izen (zientifikoa|latinoa)
-{keyword} izen zientifikoa
-{keyword} izen latinoa
+zein da {animal} izen (zientifikoa|latinoa)
+{animal} izen zientifikoa
+{animal} izen latinoa
+zein da {animal} taxonomia izena
+{animal} izen akademikoa
+{animal} latinez nola deitzen da
+zein da {animal} izen biologikoa

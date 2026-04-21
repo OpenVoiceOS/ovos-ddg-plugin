@@ -1,3 +1,6 @@
-wer hat {keyword} (veröffentlicht|verlegt)
-{keyword} verlag
-welcher verlag hat {keyword} herausgegeben
+wer hat {book} (veröffentlicht|verlegt)
+{book} verlag
+welcher verlag hat {book} herausgegeben
+von welchem verlag stammt {book}
+{book} wurde von welchem verlag veröffentlicht
+wer ist der herausgeber von {book}

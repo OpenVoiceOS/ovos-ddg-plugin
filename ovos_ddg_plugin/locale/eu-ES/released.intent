@@ -1,2 +1,7 @@
-noiz argitaratu zen {keyword}
-{keyword} argitalpen data
+noiz argitaratu zen {movie}
+{movie} argitalpen data
+noiz estreinatu zen {movie}
+{movie} estreinaldi data
+zein urtetan kaleratu zen {movie}
+{movie} noiz plazaratu zen
+{movie} kaleratzeko data

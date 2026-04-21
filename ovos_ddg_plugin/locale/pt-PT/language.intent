@@ -1,3 +1,8 @@
-em que língua está (escrito|) {keyword}
-{keyword} língua
-{keyword} língua original
+em que língua está (escrito|) {book}
+{book} língua
+{book} língua original
+em que idioma foi escrito {book}
+qual a língua de {book}
+{book} idioma
+que idioma usa {book}
+em que linguagem está {book}

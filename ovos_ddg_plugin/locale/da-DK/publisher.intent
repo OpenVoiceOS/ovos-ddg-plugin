@@ -1,3 +1,7 @@
-hvem udgav {keyword}
-{keyword} forlag
-hvilket forlag udgav {keyword}
+hvem udgav {book}
+{book} forlag
+hvilket forlag udgav {book}
+hvem er forlaget bag {book}
+{book} udgiver
+hvem publicerede {book}
+hvem stod for udgivelsen af {book}

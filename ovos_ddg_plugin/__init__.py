@@ -185,23 +185,38 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
             self._intent_matchers[lang] = IntentContainer()
         self._intent_matchers[lang].add_intent(key, samples)
 
-    def _match_infobox_intent(self, utterance: str, lang: str) -> Tuple[Optional[str], str]:
-        """Try to match *utterance* against a known infobox field intent.
+    def _match_infobox_intents(self, utterance: str, lang: str) -> List[Tuple[str, str, str]]:
+        """Return all candidate infobox intent matches for *utterance*, ordered by confidence.
 
-        Returns:
-            (field_name, keyword) when a match is found, or (None, utterance) otherwise.
+        Each entry is (intent_name, keyword, entity_type) where entity_type is the
+        matched slot name (e.g. "movie", "place", "person") — useful for disambiguation.
+        Returns an empty list when no match is found.
         """
         lang = lang.split("-")[0]
         if lang not in self._intent_matchers:
-            return None, utterance
-        # Strip possessive 's so "Darwin's father" matches "{keyword} father" patterns.
-        normalised = utterance.replace("'s ", " ").replace("'s ", " ")
-        match = self._intent_matchers[lang].calc_intent(normalised)
-        entities = match.get("entities", {})
-        kw: Optional[str] = entities.get("keyword") or next(iter(entities.values()), None)
-        if kw:
-            LOG.debug(f"DDG infobox intent: {match['name']} keyword={kw!r} conf={match['conf']:.2f}")
-            return match["name"], kw
+            return []
+        normalised = utterance.replace("'s ", " ").replace("\u2019s ", " ")
+        candidates = []
+        for match in self._intent_matchers[lang].calc_intents(normalised):
+            entities = match.get("entities", {})
+            kw: Optional[str] = entities.get("keyword") or next(iter(entities.values()), None)
+            if not kw:
+                continue
+            entity_type = next(iter(entities.keys()), "keyword")
+            candidates.append((match["name"], kw, entity_type, match["conf"]))
+        candidates.sort(key=lambda x: x[3], reverse=True)
+        LOG.debug(f"DDG infobox candidates: {[(n, kw, et) for n, kw, et, _ in candidates]}")
+        return [(name, kw, entity_type) for name, kw, entity_type, _ in candidates]
+
+    def _match_infobox_intent(self, utterance: str, lang: str) -> Tuple[Optional[str], str]:
+        """Return the single best infobox intent match (backwards-compatible wrapper).
+
+        Returns (field_name, keyword) or (None, utterance).
+        """
+        candidates = self._match_infobox_intents(utterance, lang)
+        if candidates:
+            name, kw, _ = candidates[0]
+            return name, kw
         return None, utterance
 
     # ------------------------------------------------------------------
@@ -320,18 +335,24 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
             k: Maximum number of results to return.
         """
         lang = lang or Configuration().get("lang", "en-us")
-        intent, kw = self._match_infobox_intent(query, lang)
-        if intent:
-            infobox = self.get_infobox(kw, lang=lang)[0]
-            # Try the intent name directly, then any registered aliases.
-            answer = infobox.get(intent)
-            if answer is None:
-                for alias in self.FIELD_ALIASES.get(intent, []):
-                    answer = infobox.get(alias)
-                    if answer is not None:
-                        break
-            if answer:
-                return [(answer, 0.9)]
+        candidates = self._match_infobox_intents(query, lang)
+        if candidates:
+            # Fetch the infobox once per unique keyword (candidates are already sorted by confidence).
+            infoboxes: Dict[str, Dict[str, Any]] = {}
+            for intent, kw, entity_type in candidates:
+                if kw not in infoboxes:
+                    infoboxes[kw] = self.get_infobox(kw, lang=lang)[0]
+                infobox = infoboxes[kw]
+                # Try intent name directly, then registered aliases.
+                answer = infobox.get(intent)
+                if answer is None:
+                    for alias in self.FIELD_ALIASES.get(intent, []):
+                        answer = infobox.get(alias)
+                        if answer is not None:
+                            break
+                if answer:
+                    LOG.debug(f"DDG infobox hit: intent={intent!r} entity_type={entity_type!r} kw={kw!r}")
+                    return [(answer, 0.9)]
         data = self._search(query, lang)
         abstract: str = data.get("AbstractText", "")
         if abstract:
