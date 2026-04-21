@@ -1,2 +1,2 @@
-on (està|és) enterrat {query}
-on (és|està) la tomba de {query}
+on (està|és) enterrat {keyword}
+on (és|està) la tomba de {keyword}

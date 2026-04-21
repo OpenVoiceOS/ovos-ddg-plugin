@@ -1,5 +1,5 @@
-date de naissance de {query}
-quand {query} est-elle née
-quand {query} est-il né
-quel est l'anniversaire de {query}
-quelle est la date de naissance de {query}
+date de naissance de {keyword}
+quand {keyword} est-elle née
+quand {keyword} est-il né
+quel est l'anniversaire de {keyword}
+quelle est la date de naissance de {keyword}

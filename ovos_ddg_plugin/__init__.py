@@ -109,9 +109,9 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
         if lang not in self._intent_matchers:
             return None, utterance
         match = self._intent_matchers[lang].calc_intent(utterance)
-        kw: Optional[str] = match.get("entities", {}).get("query")
+        kw: Optional[str] = match.get("entities", {}).get("keyword")
         if kw:
-            LOG.debug(f"DDG infobox intent: {match['name']} query={kw!r} conf={match['conf']:.2f}")
+            LOG.debug(f"DDG infobox intent: {match['name']} keyword={kw!r} conf={match['conf']:.2f}")
             return match["name"], kw
         return None, utterance
 

@@ -337,33 +337,33 @@ class TestIntentMatching(unittest.TestCase):
         self.assertEqual(kw, "when was Einstein born")
 
     def test_register_and_match_extracts_entity(self):
-        self.engine._register_intent("born", ["when was {query} born"], "en")
+        self.engine._register_intent("born", ["when was {keyword} born"], "en")
         intent, kw = self.engine._match_infobox_intent("when was Einstein born", "en")
         self.assertEqual(intent, "born")
         self.assertEqual(kw, "Einstein")
 
     def test_lang_uses_only_base_code(self):
         """en-US and en-GB should both hit the 'en' matcher."""
-        self.engine._register_intent("born", ["when was {query} born"], "en-US")
+        self.engine._register_intent("born", ["when was {keyword} born"], "en-US")
         intent_gb, _ = self.engine._match_infobox_intent("when was Newton born", "en-GB")
         self.assertEqual(intent_gb, "born")
 
     def test_no_match_returns_full_utterance_as_keyword(self):
-        self.engine._register_intent("born", ["when was {query} born"], "en")
+        self.engine._register_intent("born", ["when was {keyword} born"], "en")
         intent, kw = self.engine._match_infobox_intent("tell me about gravity", "en")
         self.assertIsNone(intent)
         self.assertEqual(kw, "tell me about gravity")
 
     def test_multiple_intents_registered_for_same_lang(self):
-        self.engine._register_intent("born", ["when was {query} born"], "en")
-        self.engine._register_intent("died", ["when did {query} die"], "en")
+        self.engine._register_intent("born", ["when was {keyword} born"], "en")
+        self.engine._register_intent("died", ["when did {keyword} die"], "en")
         intent, kw = self.engine._match_infobox_intent("when did Newton die", "en")
         self.assertEqual(intent, "died")
         self.assertEqual(kw, "Newton")
 
     def test_separate_matchers_per_language(self):
-        self.engine._register_intent("born", ["when was {query} born"], "en")
-        self.engine._register_intent("born", ["quando nasceu {query}"], "pt")
+        self.engine._register_intent("born", ["when was {keyword} born"], "en")
+        self.engine._register_intent("born", ["quando nasceu {keyword}"], "pt")
         intent_en, kw_en = self.engine._match_infobox_intent("when was Newton born", "en")
         intent_pt, kw_pt = self.engine._match_infobox_intent("quando nasceu Newton", "pt")
         self.assertEqual(intent_en, "born")
@@ -494,6 +494,144 @@ class TestPluginLoading(unittest.TestCase):
     def test_toolbox_is_toolbox_subclass(self):
         from ovos_plugin_manager.templates.agent_tools import ToolBox
         self.assertTrue(issubclass(DuckDuckGoToolbox, ToolBox))
+
+
+# ---------------------------------------------------------------------------
+# Intent parsing — all languages
+# ---------------------------------------------------------------------------
+
+# (utterance, expected_intent, expected_keyword)
+# Only intents with actual content in the locale files are included.
+# Ambiguous utterances (tied intents) are avoided; specific forms are used instead.
+_INTENT_CASES = {
+    "ca": [
+        ("quan va néixer Albert Einstein", "born", "Albert Einstein"),
+        ("quan va morir Stephen Hawking", "died", "Stephen Hawking"),
+        ("per a què es coneix Marie Curie", "known_for", "Marie Curie"),
+        ("on està enterrat Newton", "resting_place", "Newton"),
+        ("quants fills té Darwin", "children", "Darwin"),
+        ("quina és l'alma mater de Hawking", "alma_mater", "Hawking"),
+        ("on va estudiar Einstein", "education", "Einstein"),
+        ("quin és el lloc web oficial de Newton", "official_website", "Newton"),
+        ("quants anys tenia Darwin en morir", "age_at_death", "Darwin"),
+    ],
+    "da": [
+        ("hvornår blev Albert Einstein født", "born", "Albert Einstein"),
+        ("hvornår døde Stephen Hawking", "died", "Stephen Hawking"),
+        ("hvad er Marie Curie berømt for", "known_for", "Marie Curie"),
+        ("hvor ligger Newton begravet", "resting_place", "Newton"),
+        ("hvor mange børn har Darwin har", "children", "Darwin"),
+        ("hvad er Hawking alma mater", "alma_mater", "Hawking"),
+        ("hvor studerede Einstein", "education", "Einstein"),
+        ("hvad er Newton officielle hjemmeside", "official_website", "Newton"),
+        ("hvad er Darwin specialeemne", "thesis", "Darwin"),
+        ("hvor gammel var Hawking ved hans død", "age_at_death", "Hawking"),
+    ],
+    "de": [
+        ("wann wurde Albert Einstein geboren", "born", "Albert Einstein"),
+        ("wann ist Stephen Hawking gestorben", "died", "Stephen Hawking"),
+        ("wofür ist Marie Curie bekannt", "known_for", "Marie Curie"),
+        ("wo ist Newton begraben", "resting_place", "Newton"),
+        ("wie viele Kinder hatte Darwin", "children", "Darwin"),
+        ("was ist die Universität von Hawking", "alma_mater", "Hawking"),
+        ("wo hat Einstein studiert", "education", "Einstein"),
+        ("was ist die offizielle Website von Newton", "official_website", "Newton"),
+        ("was ist Darwin Diplomarbeitsthema", "thesis", "Darwin"),
+        ("wie alt war Hawking als sie starb", "age_at_death", "Hawking"),
+    ],
+    "en": [
+        ("when was Albert Einstein born", "born", "Albert Einstein"),
+        ("when did Stephen Hawking die", "died", "Stephen Hawking"),
+        ("what is Marie Curie known for", "known_for", "Marie Curie"),
+        ("where is Newton resting place", "resting_place", "Newton"),
+        ("how many children did Darwin have", "children", "Darwin"),
+        ("what is Hawking alma mater", "alma_mater", "Hawking"),
+        ("where did Einstein study", "education", "Einstein"),
+        ("what is Newton official website", "official_website", "Newton"),
+        ("what is Darwin thesis subject", "thesis", "Darwin"),
+        ("how old was Hawking on his death", "age_at_death", "Hawking"),
+    ],
+    "eu": [
+        ("noiz jaio zen Albert Einstein", "born", "Albert Einstein"),
+        ("noiz hil zen Stephen Hawking", "died", "Stephen Hawking"),
+        ("zergatik da ezagun Marie Curie", "known_for", "Marie Curie"),
+        ("non dago lurperatuta Newton", "resting_place", "Newton"),
+        ("zenbat haur izan ditu Darwin", "children", "Darwin"),
+        ("zer da Hawking alma mater", "alma_mater", "Hawking"),
+        ("non ikasi zuen Einstein", "education", "Einstein"),
+        ("zein da Newton webgune ofiziala", "official_website", "Newton"),
+        ("zein da Darwin tesiaren gaia", "thesis", "Darwin"),
+        ("zenbat urte zituen Hawking hil zenean", "age_at_death", "Hawking"),
+    ],
+    "fr": [
+        ("quand Albert Einstein est-il né", "born", "Albert Einstein"),
+        ("quand Stephen Hawking est-il mort", "died", "Stephen Hawking"),
+        ("pour quoi Marie Curie est-il connu", "known_for", "Marie Curie"),
+        ("où est enterré Newton", "resting_place", "Newton"),
+        ("combien d'enfants a Darwin", "children", "Darwin"),
+        ("dans quelle université Hawking a-t-il étudié", "alma_mater", "Hawking"),
+        ("où Einstein a fait ses études", "education", "Einstein"),
+        ("quel est le site officiel de Newton", "official_website", "Newton"),
+        ("quel est le sujet de thèse de Darwin", "thesis", "Darwin"),
+        ("quel âge avait Hawking lorsqu'il est mort", "age_at_death", "Hawking"),
+    ],
+    "gl": [
+        ("cando finou Stephen Hawking", "died", "Stephen Hawking"),
+        ("por que se coñece Marie Curie", "known_for", "Marie Curie"),
+        ("onde está enterrado Newton", "resting_place", "Newton"),
+        ("cantos fillos tivo Darwin", "children", "Darwin"),
+        ("onde se formou Einstein", "education", "Einstein"),
+        ("cal é o sitio web oficial de Newton", "official_website", "Newton"),
+        ("que é o tema da tese Darwin", "thesis", "Darwin"),
+        ("cantos anos tiña Hawking cando morreu", "age_at_death", "Hawking"),
+    ],
+    "it": [
+        ("quando è nata Albert Einstein", "born", "Albert Einstein"),
+        ("qual è il sito ufficiale di Newton", "official_website", "Newton"),
+    ],
+    "pt": [
+        ("quando foi a morte de Stephen Hawking", "died", "Stephen Hawking"),
+        ("pelo que é Marie Curie conhecida", "known_for", "Marie Curie"),
+        ("onde estudou Einstein", "education", "Einstein"),
+        ("quantos filhos tinha Darwin", "children", "Darwin"),
+        ("quantos anos tinha Hawking quando morreu", "age_at_death", "Hawking"),
+    ],
+}
+
+
+class TestIntentParsingAllLanguages(unittest.TestCase):
+    """Integration tests: load real locale files and verify intent matching for all languages."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.engine = DuckDuckGoRetrievalEngine.__new__(DuckDuckGoRetrievalEngine)
+        cls.engine.config = {}
+        cls.engine._kword_extractors = {}
+        cls.engine._intent_matchers = {}
+        cls.engine._load_intents()
+
+    def _assert_matches(self, lang: str, utterance: str, expected_intent: str, expected_keyword: str):
+        intent, kw = self.engine._match_infobox_intent(utterance, lang)
+        self.assertEqual(
+            intent, expected_intent,
+            f"[{lang}] {utterance!r} → expected intent {expected_intent!r}, got {intent!r}",
+        )
+        self.assertEqual(
+            kw.lower(), expected_keyword.lower(),
+            f"[{lang}] {utterance!r} → expected keyword {expected_keyword!r}, got {kw!r}",
+        )
+
+
+def _make_intent_test(lang, utterance, intent, keyword):
+    def test(self):
+        self._assert_matches(lang, utterance, intent, keyword)
+    test.__name__ = f"test_{lang}_{intent}_{keyword.lower().replace(' ', '_')}"
+    return test
+
+for _lang, _cases in _INTENT_CASES.items():
+    for _utterance, _intent, _keyword in _cases:
+        _name = f"test_{_lang}_{_intent}_{_keyword.lower().replace(' ', '_')}"
+        setattr(TestIntentParsingAllLanguages, _name, _make_intent_test(_lang, _utterance, _intent, _keyword))
 
 
 if __name__ == "__main__":
