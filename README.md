@@ -1,62 +1,138 @@
-# DuckDuckGo Plugin
+# ovos-ddg-plugin
+
+[![PyPI](https://img.shields.io/pypi/v/ovos-ddg-plugin)](https://pypi.org/project/ovos-ddg-plugin/)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
+[![Python](https://img.shields.io/badge/python-%3E%3D3.10-blue)](https://www.python.org/)
+
+DuckDuckGo Instant Answers plugin for [OpenVoiceOS](https://openvoiceos.org).
+
+Provides factual Q&A, infobox lookups (birthdate, death, alma mater, …), and image URLs via the [DDG Instant Answers API](https://duckduckgo.com/api). No API key required.
+
+Implements the `opm.agents.retrieval` and `opm.agents.toolbox` entry points — usable both as a standalone Python library and as an OVOS agent plugin.
+
+---
+
+## Installation
+
+```bash
+pip install ovos-ddg-plugin
+```
+
+> **Legacy users:** the old `ovos-ddg-solver-plugin` package remains on PyPI. New code should import from `ovos_ddg_plugin`.
+
+---
+
+## Standalone usage
+
+### Text answers
 
 ```python
-from ovos_ddg_solver import DuckDuckGoSolver
+from ovos_ddg_plugin import DuckDuckGoRetrievalEngine
 
-d = DuckDuckGoSolver()
+ddg = DuckDuckGoRetrievalEngine()
 
-ans = d.spoken_answer("Quem foi Bartolomeu Dias", lang="pt")
-print(ans)
-# Bartolomeu Dias, OM, OMP foi um navegador português que ficou célebre por ter sido o primeiro europeu a navegar para além do extremo sul da África, contornando o Cabo da Boa Esperança e chegando ao Oceano Índico a partir do Atlântico, abrindo o caminho marítimo para a Índia. Dele não se conhecem os antepassados, mas mercês e armas a ele outorgadas passaram a seus descendentes. Seu irmão foi Diogo Dias, também experiente navegador. Foi o principal navegador da esquadra de Pedro Álvares Cabral em 1500. As terras do Brasil, até então desconhecidas pelos portugueses, confundiram os navegadores, que pensaram tratar-se de uma ilha, a que deram o nome de "Vera Cruz".
+# Returns up to k (sentence, score) tuples, scored 0.9 → 0.8 → 0.7 …
+results = ddg.query("who is Isaac Newton", lang="en-us", k=3)
+for sentence, score in results:
+    print(f"[{score:.1f}] {sentence}")
+# [0.9] Sir Isaac Newton was an English polymath active as a mathematician …
+# [0.8] He was a key figure in the Scientific Revolution …
+# [0.7] His book Philosophiæ Naturalis Principia Mathematica …
 
-info = d.get_infobox("Stephen Hawking", lang="pt")[0]
-from pprint import pprint
-
-pprint(info)
-# {'born': 'Quinta-feira, oito de Janeiro, mil novecentos e quarenta e dois',
-#  'died': 'Quarta-feira, catorze de Março, dois mil e dezoito',
-#  'facebook profile': 'stephenhawking',
-#  'imdb id': 'nm0370071',
-#  'instance of': {'entity-type': 'item', 'id': 'Q5', 'numeric-id': 5},
-#  'official website': 'https://hawking.org.uk',
-#  'rotten tomatoes id': 'celebrity/stephen_hawking',
-#  'wikidata aliases': ['Stephen Hawking',
-#                       'Hawking',
-#                       'Stephen William Hawking',
-#                       'S. W. Hawking'],
-#  'wikidata description': 'físico teórico, cosmólogo e autor inglês (1942–2018)',
-#  'wikidata id': 'Q17714',
-#  'wikidata label': 'Stephen Hawking',
-#  'youtube channel': 'UCPyd4mR0p8zHd8Z0HvHc0fw'}
-
-
-# chunked answer, "tell me more"
-for sentence in d.long_answer("who is Isaac Newton", lang="en"):
-    print(sentence["title"])
-    print(sentence["summary"])
-    print(sentence.get("img"))
-
-    # who is Isaac Newton
-    # Sir Isaac Newton was an English polymath active as a mathematician, physicist, astronomer, alchemist, theologian, author, and inventor.
-    # https://duckduckgo.com/i/401ff0bf4dfa0847.jpg
-
-    # who is Isaac Newton
-    # He was a key figure in the Scientific Revolution and the Enlightenment that followed.
-    # https://duckduckgo.com/i/401ff0bf4dfa0847.jpg
-
-    # who is Isaac Newton
-    # His book Philosophiæ Naturalis Principia Mathematica, first published in 1687, achieved the first great unification in physics and established classical mechanics.
-    # https://duckduckgo.com/i/401ff0bf4dfa0847.jpg
-
-    # who is Isaac Newton
-    # Newton also made seminal contributions to optics, and shares credit with German mathematician Gottfried Wilhelm Leibniz for formulating infinitesimal calculus, though he developed calculus years before Leibniz.
-    # https://duckduckgo.com/i/401ff0bf4dfa0847.jpg
-
-    # who is Isaac Newton
-    # Newton contributed to and refined the scientific method, and his work is considered the most influential in bringing forth modern science.
-    # https://duckduckgo.com/i/401ff0bf4dfa0847.jpg
-
-    # who is Isaac Newton
-    # In the Principia, Newton formulated the laws of motion and universal gravitation that formed the dominant scientific viewpoint for centuries until it was superseded by the theory of relativity.
-    # https://duckduckgo.com/i/401ff0bf4dfa0847.jpg
+# Infobox fields are returned with score 0.9
+results = ddg.query("when was Stephen Hawking born", lang="en-us")
+print(results)
+# [('January 8, 1942', 0.9)]
 ```
+
+### Infobox
+
+```python
+infobox, related = ddg.get_infobox("Stephen Hawking", lang="en-us")
+from pprint import pprint
+pprint(infobox)
+# {'born': 'January 8, 1942',
+#  'died': 'March 14, 2018',
+#  'official website': 'https://hawking.org.uk',
+#  'wikidata description': 'English theoretical physicist and cosmologist',
+#  ...}
+print(related[:3])
+# ['A Brief History of Time', 'Cambridge University', 'General relativity']
+```
+
+### Image URL
+
+```python
+url = ddg.get_image("Eiffel Tower", lang="en-us")
+print(url)
+# https://duckduckgo.com/i/...jpg  (or None if DDG has no image)
+```
+
+---
+
+## Agent tools
+
+`DuckDuckGoToolbox` exposes two tools for OVOS agent pipelines:
+
+| Tool | Description |
+|------|-------------|
+| `search_duckduckgo` | Best text answer (infobox field or abstract sentence) |
+| `duckduckgo_image` | Image URL for a topic, or `null` |
+
+```python
+from ovos_ddg_plugin import DuckDuckGoToolbox, SearchDuckDuckGoArgs, DDGImageArgs
+
+tb = DuckDuckGoToolbox()
+
+answer = tb.search_ddg(SearchDuckDuckGoArgs(query="Marie Curie birthdate", lang="en-us"))
+print(answer.result)
+# November 7, 1867
+
+img = tb.ddg_image(DDGImageArgs(query="Marie Curie", lang="en-us"))
+print(img.url)
+# https://duckduckgo.com/i/...jpg
+```
+
+---
+
+## Supported locales
+
+DDG Instant Answers supports ~70 locale codes. The engine maps any BCP-47 language tag to the closest supported DDG locale automatically.
+
+Infobox date fields (`born`, `died`) are formatted in the requested language using `ovos-date-parser`. All other fields are returned as-is from the DDG API.
+
+---
+
+## Infobox intent matching
+
+The engine ships Padacioso intent files for 10 languages that let `query()` detect when a question targets a specific infobox field, returning the precise value instead of the full abstract:
+
+| Intent | Example |
+|--------|---------|
+| `born` | "when was {query} born" |
+| `died` | "when did {query} die" |
+| `known_for` | "what is {query} known for" |
+| `alma_mater` | "what is {query} alma mater" |
+| `children` | "how many children did {query} have" |
+| `education` | "where did {query} study" |
+| `fields` | "what field does {query} work in" |
+| `thesis` | "{query} thesis" |
+| `resting_place` | "where is {query} buried" |
+| `official_website` | "{query} official website" |
+| `age_at_death` | "how old was {query} when they died" |
+
+---
+
+## Configuration
+
+All keys are optional and read from the OVOS plugin config block for `ovos-ddg-plugin`:
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `keyword_extractor` | `"ovos-rake-keyword-extractor"` | OPM keyword extractor plugin used when a direct query returns no result |
+
+---
+
+## License
+
+Apache 2.0 — see [LICENSE](LICENSE).
