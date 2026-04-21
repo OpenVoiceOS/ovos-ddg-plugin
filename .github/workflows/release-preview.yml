@@ -7,10 +7,7 @@ on:
 
 jobs:
   release_preview:
-    uses: OpenVoiceOS/gh-automations/.github/workflows/release-preview.yml@dev
-    secrets:
-      PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-      MATRIX_TOKEN: ${{ secrets.MATRIX_TOKEN }}
+    uses: OpenVoiceOS/gh-automations/.github/workflows/release-preview.yml@05c0bb438ca7d2bc485465bc233fd4e1997f23c5
     with:
-      package_name: 'ovos_ddg_solver_plugin'
-      version_file: 'ovos_ddg_solver/version.py'
+      package_name: 'ovos_ddg_plugin'
+      version_file: 'ovos_ddg_plugin/version.py'
