@@ -11,7 +11,6 @@
 # limitations under the License.
 import datetime
 import os.path
-from pprint import pformat
 from typing import Optional, List, Tuple, Dict, Any
 
 import requests
@@ -30,7 +29,7 @@ from quebra_frases import sentence_tokenize
 
 
 class DuckDuckGoRetrievalEngine(RetrievalEngine):
-    # DDG is weird and has lang-codes lang/region "backwards"
+    # DDG reverses the standard lang-region order in its locale codes
     LOCALE_MAPPING = {'ar-XA': 'xa-ar', 'en-XA': 'xa-en', 'es-AR': 'ar-es', 'en-AU': 'au-en', 'de-AT': 'at-de',
                       'fr-BE': 'be-fr', 'nl-BE': 'be-nl', 'pt-BR': 'br-pt', 'bg-BG': 'bg-bg', 'en-CA': 'ca-en',
                       'fr-CA': 'ca-fr', 'ca-KI': 'ct-ca', 'es-CL': 'cl-es', 'zh-CN': 'cn-zh', 'es-CO': 'co-es',
@@ -48,185 +47,131 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
 
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         super().__init__(config=config)
-        self.kword_extractors: Dict[str, KeywordExtractor] = {}
-        self.intent_matchers: Dict[str, IntentContainer] = {}
-        self.register_from_file()
+        self._kword_extractors: Dict[str, KeywordExtractor] = {}
+        self._intent_matchers: Dict[str, IntentContainer] = {}
+        self._load_intents()
 
-    def get_keyword_extractor(self, lang: str) -> Optional[KeywordExtractor]:
-        if lang not in self.kword_extractors:
-            kw_plugin: str = self.config.get("keyword_extractor") or "ovos-rake-keyword-extractor"
-            kword_extractor_class = load_keyword_extract_plugin(kw_plugin)
-            if not kword_extractor_class:
-                return None
-            self.kword_extractors[lang] = kword_extractor_class()
-        return self.kword_extractors[lang]
+    # ------------------------------------------------------------------
+    # Intent matching for infobox fields
+    # ------------------------------------------------------------------
 
-    def register_infobox_intent(self, key: str, samples: List[str], lang: str) -> None:
-        lang = lang.split("-")[0]
-        if lang not in self.intent_matchers:
-            self.intent_matchers[lang] = IntentContainer()
-        self.intent_matchers[lang].add_intent(key.split(".intent")[0], samples)
-
-    def match_infobox_intent(self, utterance: str, lang: str) -> Tuple[Optional[str], str]:
-        lang = lang.split("-")[0]
-        if lang not in self.intent_matchers:
-            return None, utterance
-        matcher: IntentContainer = self.intent_matchers[lang]
-        match = matcher.calc_intent(utterance)
-        kw = match.get("entities", {}).get("query")
-        intent = None
-        if kw:
-            intent = match["name"]
-            LOG.debug(f"DDG Intent: {intent} Query: {kw} - Confidence: {match['conf']}")
-        else:
-            LOG.debug(f"Could not match intent for '{lang}' from '{utterance}'")
-        return intent, kw or utterance
-
-    def register_from_file(self) -> None:
+    def _load_intents(self) -> None:
         files = [
-            "known_for.intent",
-            "resting_place.intent",
-            "born.intent",
-            "died.intent",
-            "children.intent",
-            "alma_mater.intent",
-            "age_at_death.intent",
-            "education.intent",
-            "fields.intent",
-            "thesis.intent",
-            "official_website.intent"
+            "known_for.intent", "resting_place.intent", "born.intent", "died.intent",
+            "children.intent", "alma_mater.intent", "age_at_death.intent",
+            "education.intent", "fields.intent", "thesis.intent", "official_website.intent",
         ]
         locale_dir = f"{os.path.dirname(__file__)}/locale"
         if not os.path.isdir(locale_dir):
             return
         for lang in os.listdir(locale_dir):
             for fn in files:
-                filename = f"{locale_dir}/{lang}/{fn}"
-                if not os.path.isfile(filename):
-                    LOG.warning(f"{filename} not found for '{lang}'")
+                path = f"{locale_dir}/{lang}/{fn}"
+                if not os.path.isfile(path):
                     continue
                 samples = []
-                with open(filename) as f:
+                with open(path) as f:
                     for line in f.read().split("\n"):
                         if not line.strip() or line.startswith("#"):
                             continue
-                        if "(" in line:
-                            samples += expand_parentheses(line)
-                        else:
-                            samples.append(line)
-                self.register_infobox_intent(fn.split(".intent")[0], samples, lang)
+                        samples += expand_parentheses(line) if "(" in line else [line]
+                self._register_intent(fn.split(".intent")[0], samples, lang)
 
-    def get_infobox(self, query: str,
-                    lang: Optional[str] = None,
-                    units: Optional[str] = None) -> Tuple[Dict[str, Any], List[str]]:
-        time_keys = ["died", "born"]
-        data = self.extract_and_search(query, lang=lang, units=units)
+    def _register_intent(self, key: str, samples: List[str], lang: str) -> None:
+        lang = lang.split("-")[0]
+        if lang not in self._intent_matchers:
+            self._intent_matchers[lang] = IntentContainer()
+        self._intent_matchers[lang].add_intent(key, samples)
+
+    def _match_infobox_intent(self, utterance: str, lang: str) -> Tuple[Optional[str], str]:
+        """Return (infobox_field, keyword) if the utterance targets a specific infobox field."""
+        lang = lang.split("-")[0]
+        if lang not in self._intent_matchers:
+            return None, utterance
+        match = self._intent_matchers[lang].calc_intent(utterance)
+        kw = match.get("entities", {}).get("query")
+        if kw:
+            LOG.debug(f"DDG infobox intent: {match['name']} query={kw} conf={match['conf']}")
+            return match["name"], kw
+        return None, utterance
+
+    # ------------------------------------------------------------------
+    # DDG API helpers
+    # ------------------------------------------------------------------
+
+    def _keyword_extractor(self, lang: str) -> Optional[KeywordExtractor]:
+        if lang not in self._kword_extractors:
+            plugin_id = self.config.get("keyword_extractor") or "ovos-rake-keyword-extractor"
+            cls = load_keyword_extract_plugin(plugin_id)
+            if cls is None:
+                return None
+            self._kword_extractors[lang] = cls()
+        return self._kword_extractors[lang]
+
+    def _fetch(self, query: str, lang: str) -> Dict[str, Any]:
+        """Raw DDG Instant Answers API call."""
+        best_lang, distance = closest_match(lang, self.LOCALE_MAPPING)
+        if distance > 10:
+            LOG.debug(f"Unsupported DDG locale: {lang}")
+            return {}
+        try:
+            return requests.get("https://api.duckduckgo.com",
+                                params={"format": "json",
+                                        "kl": self.LOCALE_MAPPING[best_lang],
+                                        "q": query}).json()
+        except Exception:
+            return {}
+
+    def _search(self, query: str, lang: str) -> Dict[str, Any]:
+        """Fetch DDG data, falling back to keyword extraction if the direct query returns nothing."""
+        data = self._fetch(query, lang)
+        if data.get("AbstractText"):
+            return data
+        kwx = self._keyword_extractor(lang)
+        if kwx:
+            keywords = kwx.extract(query, lang=lang)
+            if keywords:
+                kw = max(keywords)
+                LOG.debug(f"DDG keyword fallback: {kw!r}")
+                return self._fetch(kw, lang)
+        return {}
+
+    def get_infobox(self, query: str, lang: Optional[str] = None) -> Tuple[Dict[str, Any], List[str]]:
+        """Return (infobox_dict, related_topics) for a query."""
+        lang = lang or Configuration().get("lang", "en-us")
+        data = self._search(query, lang)
         related_topics = [t.get("Text") for t in data.get("RelatedTopics", [])]
-        infobox = {}
-        infodict = data.get("Infobox") or {}
-        for entry in infodict.get("content", []):
+        infobox: Dict[str, Any] = {}
+        for entry in (data.get("Infobox") or {}).get("content", []):
             k = entry["label"].lower().strip()
             v = entry["value"]
             try:
-                if k in time_keys and "time" in v:
+                if k in ("born", "died") and isinstance(v, dict) and "time" in v:
                     dt = datetime.datetime.strptime(v["time"], "+%Y-%m-%dT%H:%M:%SZ")
-                    infobox[k] = nice_date(dt, lang=lang or Configuration().get("lang", "en-us"))
+                    infobox[k] = nice_date(dt, lang=lang)
                 else:
                     infobox[k] = v
             except Exception:
                 continue
         return infobox, related_topics
 
-    def extract_and_search(self, query: str,
-                           lang: Optional[str] = None,
-                           units: Optional[str] = None) -> Dict[str, Any]:
-        data = self.get_data(query, lang=lang, units=units)
-        if data.get("AbstractText"):
-            return data
-        kwx = self.get_keyword_extractor(lang)
-        if kwx:
-            keywords = kwx.extract(query, lang=lang)
-            if keywords:
-                kw = max(keywords)
-                LOG.debug(f"DDG search: {kw}")
-                return self.get_data(kw, lang=lang, units=units)
-        return {}
-
-    def get_data(self, query: str,
-                 lang: Optional[str] = None,
-                 units: Optional[str] = None) -> Dict[str, Any]:
-        units = units or Configuration().get("system_unit", "metric")
-        lang = lang or Configuration().get("lang", "en-us")
-        best_lang, distance = closest_match(lang, self.LOCALE_MAPPING)
-        if distance > 10:
-            LOG.debug(f"Unsupported DDG locale: {lang}")
-            return {}
-        try:
-            data = requests.get("https://api.duckduckgo.com",
-                                params={"format": "json",
-                                        "kl": self.LOCALE_MAPPING[best_lang],
-                                        "q": query}).json()
-        except Exception:
-            return {}
-        return data
-
-    def get_image(self, query: str,
-                  lang: Optional[str] = None,
-                  units: Optional[str] = None) -> str:
-        data = self.extract_and_search(query, lang, units)
-        image = data.get("Image") or f"{os.path.dirname(__file__)}/logo.png"
-        if image.startswith("/"):
-            image = "https://duckduckgo.com" + image
-        return image
-
-    def get_spoken_answer(self, query: str,
-                          lang: Optional[str] = None,
-                          units: Optional[str] = None) -> Optional[str]:
-        lang = lang or Configuration().get("lang", "en-us")
-        intent, query = self.match_infobox_intent(query, lang=lang)
-        LOG.info(f"DDG intent: {intent} keyword: {query}")
-        if intent not in ["question", None]:
-            infobox = self.get_infobox(query, lang=lang, units=units)[0] or {}
-            LOG.debug(f"Parsing infobox: {infobox}")
-            answer = infobox.get(intent)
-            if answer:
-                return answer
-        data = self.extract_and_search(query, lang=lang, units=units)
-        return data.get("AbstractText")
-
-    def get_expanded_answer(self, query: str,
-                            lang: Optional[str] = None,
-                            units: Optional[str] = None) -> List[Dict[str, str]]:
-        img = self.get_image(query, lang=lang, units=units)
-        lang = lang or Configuration().get("lang", "en-us")
-        intent, query = self.match_infobox_intent(query, lang)
-        if intent and intent not in ["question"]:
-            infobox = self.get_infobox(query, lang=lang, units=units)[0] or {}
-            LOG.debug(pformat(infobox))
-            answer = infobox.get(intent)
-            if answer:
-                return [{"title": query, "summary": answer, "img": img}]
-        LOG.debug("DDG couldn't match infobox section, using text summary")
-        data = self.extract_and_search(query, lang=lang, units=units)
-        return [{"title": query, "summary": s, "img": img}
-                for s in sentence_tokenize(data.get("AbstractText", "")) if s]
+    # ------------------------------------------------------------------
+    # RetrievalEngine interface
+    # ------------------------------------------------------------------
 
     def query(self, query: str, lang: Optional[str] = None, k: int = 3) -> List[Tuple[str, float]]:
         """Return up to k (answer, score) tuples from DuckDuckGo."""
-        units = self.config.get("units") or Configuration().get("system_unit", "metric")
         lang = lang or Configuration().get("lang", "en-us")
-        intent, kw = self.match_infobox_intent(query, lang=lang)
-        if intent and intent not in ["question"]:
-            infobox = self.get_infobox(kw, lang=lang, units=units)[0] or {}
+        intent, kw = self._match_infobox_intent(query, lang)
+        if intent:
+            infobox = self.get_infobox(kw, lang=lang)[0]
             answer = infobox.get(intent)
             if answer:
                 return [(answer, 0.9)]
-        data = self.extract_and_search(query, lang=lang, units=units)
+        data = self._search(query, lang)
         abstract = data.get("AbstractText")
         if abstract:
-            sentences = sentence_tokenize(abstract)
-            results = [(s, 0.7) for s in sentences if s]
-            return results[:k]
+            return [(s, 0.7) for s in sentence_tokenize(abstract) if s][:k]
         return []
 
 
@@ -248,9 +193,8 @@ class DuckDuckGoToolbox(ToolBox):
         super().__init__(toolbox_id=self.toolbox_id)
 
     def search_ddg(self, args: SearchDuckDuckGoArgs) -> SearchDuckDuckGoOutput:
-        """Query DuckDuckGo and return the best answer."""
-        answer = self._engine.get_spoken_answer(args.query, lang=args.lang)
-        return SearchDuckDuckGoOutput(result=answer or "")
+        results = self._engine.query(args.query, lang=args.lang, k=1)
+        return SearchDuckDuckGoOutput(result=results[0][0] if results else "")
 
     def discover_tools(self) -> List[AgentTool]:
         return [
@@ -259,7 +203,7 @@ class DuckDuckGoToolbox(ToolBox):
                 description=(
                     "Query DuckDuckGo for factual answers: encyclopaedic information, "
                     "infobox facts (birthdate, death, known for, alma mater, …), and text summaries. "
-                    "Works offline — no API key required. Send queries as concise keywords."
+                    "No API key required. Send queries as concise keywords."
                 ),
                 argument_schema=SearchDuckDuckGoArgs,
                 output_schema=SearchDuckDuckGoOutput,
@@ -272,15 +216,6 @@ if __name__ == "__main__":
     LOG.set_level("DEBUG")
 
     d = DuckDuckGoRetrievalEngine()
-
-    ans = d.get_spoken_answer("Quem foi Bartolomeu Dias", lang="pt")
-    print(ans)
-
-    info = d.get_infobox("Stephen Hawking", lang="pt")[0]
-    from pprint import pprint
-    pprint(info)
-
-    for sentence in d.get_expanded_answer("who is Isaac Newton", lang="en"):
-        print(sentence["title"])
-        print(sentence["summary"])
-        print(sentence.get("img"))
+    print(d.query("Quem foi Bartolomeu Dias", lang="pt"))
+    print(d.get_infobox("Stephen Hawking", lang="pt")[0])
+    print(d.query("who is Isaac Newton", lang="en"))
