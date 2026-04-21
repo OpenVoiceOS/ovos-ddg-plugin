@@ -1,0 +1,12 @@
+who (coaches|coached) {person}
+{person} coach
+who is {person} coach
+who (trained|mentored|instructed) {person}
+{person} (trainer|coach|instructor)
+who is {person} (current|) (coach|trainer)
+tell me who coaches {person}
+{person} is coached by who
+who is the coach of {person}
+who has coached {team}
+{team} current coach
+{team} is coached by who

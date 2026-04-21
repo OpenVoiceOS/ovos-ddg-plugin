@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ovos-ddg-plugin"
+dynamic = ["version"]
+description = "OVOS DuckDuckGo plugin — factual Q&A and infobox lookups via DDG Instant Answers"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "JarbasAi", email = "jarbasai@mailfence.com"}
+]
+keywords = ["ovos", "plugin", "duckduckgo", "ddg", "search"]
+requires-python = ">=3.10"
+dependencies = [
+    "ovos-utils>=0.7.0,<1.0.0",
+    "ovos-plugin-manager>=2.3.0a1,<3.0.0",
+    "ovos-config>=0.0.12,<2.0.0",
+    "ovos-date-parser>=0.0.1",
+    "requests>=2.0.0",
+    "langcodes>=3.0.0",
+    "padacioso>=0.2.0",
+    "quebra-frases>=0.3.0",
+    "pydantic>=2.0.0,<3.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/OpenVoiceOS/ovos-ddg-solver-plugin"
+
+[project.entry-points."opm.agents.retrieval"]
+"ovos-ddg-plugin" = "ovos_ddg_plugin:DuckDuckGoRetrievalEngine"
+
+[project.entry-points."opm.agents.toolbox"]
+"ovos-ddg-tools" = "ovos_ddg_plugin:DuckDuckGoToolbox"
+
+[tool.setuptools.dynamic]
+version = {attr = "ovos_ddg_plugin.version.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["ovos_ddg_plugin*"]
+
+[tool.setuptools.package-data]
+"ovos_ddg_plugin" = ["locale/**/*"]

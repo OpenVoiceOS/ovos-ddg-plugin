@@ -1,0 +1,12 @@
+who (succeeded|came after) {person}
+who was {person} successor
+who held the (position|role|title) after {person}
+who (replaced|took over from) {person}
+who followed {person} (in power|as leader|as ruler|)
+{person} successor
+who came after {person} in (office|the role|power)
+who took over from {person}
+who was (appointed|chosen) after {person}
+tell me {person} successor
+{person} was succeeded by who
+who (leads|rules|holds the role) after {person}
