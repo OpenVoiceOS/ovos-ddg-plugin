@@ -1,0 +1,5 @@
+who (preceded|came before) {keyword}
+who was {keyword}'s predecessor
+who held the (position|role|title) before {keyword}
+who was (in charge|ruling|in power) before {keyword}
+who did {keyword} (succeed|replace)

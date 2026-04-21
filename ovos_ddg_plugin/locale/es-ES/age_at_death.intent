@@ -1,3 +1,5 @@
-cuando murió
-que edad tenía en su muerte
-qué edad tenía el día que murió
+cuántos años tenía {keyword} cuando (murió|falleció)
+cuántos años tenía {keyword} el día que (murió|falleció)
+qué edad tenía {keyword} en su (muerte|fallecimiento)
+cuántos años vivió {keyword}
+con cuántos años murió {keyword}

@@ -1,0 +1,5 @@
+quando è (morto|morta) {keyword}
+quando è avvenuta la morte di {keyword}
+qual è la data di morte di {keyword}
+{keyword} (giorno|data) di morte
+quando ci ha lasciati {keyword}

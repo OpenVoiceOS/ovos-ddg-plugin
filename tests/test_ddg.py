@@ -150,14 +150,16 @@ class TestGetInfobox(unittest.TestCase):
         self.engine._search = MagicMock(return_value=_infobox_payload("Known for", "Calculus"))
         with patch("ovos_ddg_plugin.Configuration", return_value={}):
             infobox, _ = self.engine.get_infobox("Newton", lang="en-us")
-        self.assertEqual(infobox["known for"], "Calculus")
+        # Labels are lowercased and spaces replaced with underscores
+        self.assertEqual(infobox["known_for"], "Calculus")
 
-    def test_label_normalised_to_lowercase(self):
+    def test_label_normalised_to_lowercase_and_underscores(self):
         self.engine._search = MagicMock(return_value=_infobox_payload("Alma Mater", "Cambridge"))
         with patch("ovos_ddg_plugin.Configuration", return_value={}):
             infobox, _ = self.engine.get_infobox("Newton", lang="en-us")
-        self.assertIn("alma mater", infobox)
+        self.assertIn("alma_mater", infobox)
         self.assertNotIn("Alma Mater", infobox)
+        self.assertNotIn("alma mater", infobox)
 
     def test_date_fields_formatted_via_nice_date(self):
         dt_str = "+1942-01-08T00:00:00Z"
@@ -279,6 +281,39 @@ class TestQuery(unittest.TestCase):
         with patch("ovos_ddg_plugin.Configuration", return_value={}):
             results = self.engine.query("xyzzy", lang="en-us")
         self.assertEqual(results, [])
+
+    def test_possessive_s_stripped_before_matching(self):
+        # "Darwin's father" should match the "father" intent and extract "Darwin"
+        self.engine._load_intents()
+        intent, kw = self.engine._match_infobox_intent("Darwin's father", "en")
+        self.assertEqual(intent, "father")
+        self.assertEqual(kw.lower(), "darwin")
+
+    def test_field_alias_alma_mater_resolves_via_education(self):
+        # alma_mater intent → DDG stores as "education" key
+        self.engine._match_infobox_intent = MagicMock(return_value=("alma_mater", "Hawking"))
+        self.engine.get_infobox = MagicMock(return_value=({"education": "University of Cambridge"}, []))
+        with patch("ovos_ddg_plugin.Configuration", return_value={}):
+            results = self.engine.query("what is Hawking alma mater", lang="en-us")
+        self.assertEqual(results, [("University of Cambridge", 0.9)])
+
+    def test_field_alias_resting_place_resolves_via_burial(self):
+        # resting_place intent → DDG sometimes stores as "burial"
+        self.engine._match_infobox_intent = MagicMock(return_value=("resting_place", "Queen Elizabeth II"))
+        self.engine.get_infobox = MagicMock(return_value=({"burial": "Windsor Castle"}, []))
+        with patch("ovos_ddg_plugin.Configuration", return_value={}):
+            results = self.engine.query("where is Queen Elizabeth II buried", lang="en-us")
+        self.assertEqual(results, [("Windsor Castle", 0.9)])
+
+    def test_infobox_key_spaces_normalised_to_underscores(self):
+        # "age at death" from DDG → stored as "age_at_death" in infobox
+        self.engine._search = MagicMock(return_value={"Infobox": {"content": [
+            {"label": "Age at death", "value": "76 years"}
+        ]}, "RelatedTopics": []})
+        with patch("ovos_ddg_plugin.Configuration", return_value={}):
+            infobox, _ = self.engine.get_infobox("Hawking", lang="en-us")
+        self.assertEqual(infobox.get("age_at_death"), "76 years")
+        self.assertNotIn("age at death", infobox)
 
     def test_infobox_match_returns_single_result_score_09(self):
         self.engine._match_infobox_intent = MagicMock(return_value=("born", "Hawking"))
@@ -550,6 +585,18 @@ _INTENT_CASES = {
         ("what is Newton official website", "official_website", "Newton"),
         ("what is Darwin thesis subject", "thesis", "Darwin"),
         ("how old was Hawking on his death", "age_at_death", "Hawking"),
+        ("where did Turing work", "institutions", "Turing"),
+        ("what awards did Curie win", "notable_awards", "Curie"),
+        ("what is Picasso most famous work", "notable_work", "Picasso"),
+        ("what movement did Picasso belong to", "movement", "Picasso"),
+        ("what is Hawking profession", "occupation", "Hawking"),
+        ("who preceded Elizabeth II", "predecessor", "Elizabeth II"),
+        ("who succeeded Elizabeth II", "successor", "Elizabeth II"),
+        ("what religion does Einstein follow", "religion", "Einstein"),
+        ("who were Hawking doctoral students", "doctoral_students", "Hawking"),
+        ("when was Newton baptised", "baptised", "Newton"),
+        ("who is the father of Darwin", "father", "Darwin"),
+        ("who is the mother of Darwin", "mother", "Darwin"),
     ],
     "eu": [
         ("noiz jaio zen Albert Einstein", "born", "Albert Einstein"),
@@ -592,7 +639,7 @@ _INTENT_CASES = {
     "pt": [
         ("quando foi a morte de Stephen Hawking", "died", "Stephen Hawking"),
         ("pelo que é Marie Curie conhecida", "known_for", "Marie Curie"),
-        ("onde estudou Einstein", "education", "Einstein"),
+        ("onde se formou Einstein", "education", "Einstein"),
         ("quantos filhos tinha Darwin", "children", "Darwin"),
         ("quantos anos tinha Hawking quando morreu", "age_at_death", "Hawking"),
     ],

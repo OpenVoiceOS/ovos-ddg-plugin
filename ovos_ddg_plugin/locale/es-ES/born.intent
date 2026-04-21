@@ -1,6 +1,5 @@
-cuando es el día de nacimiento
-cuando es el nacimiento
-cuando es {keyword} cumpleaños
-cuando nació
-día de nacimiento
-fecha de nacimiento
+cuándo nació {keyword}
+cuándo es el cumpleaños de {keyword}
+cuál es la fecha de nacimiento de {keyword}
+{keyword} (día|fecha) de nacimiento
+cuándo es el (nacimiento|aniversario) de {keyword}

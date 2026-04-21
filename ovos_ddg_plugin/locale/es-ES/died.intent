@@ -1,4 +1,5 @@
-cuando fue la muerte
-cuando murió
-día de la muerte
-fecha de la muerte
+cuándo murió {keyword}
+cuándo fue la muerte de {keyword}
+cuál es la fecha de fallecimiento de {keyword}
+{keyword} (día|fecha) de (muerte|fallecimiento)
+cuándo falleció {keyword}

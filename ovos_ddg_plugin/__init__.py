@@ -69,12 +69,26 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
     # Infobox intent matching
     # ------------------------------------------------------------------
 
+    # Intent name → DDG infobox key(s) to try when the intent name differs from the stored key.
+    # DDG labels are normalised to underscores (spaces replaced), so "age at death" → "age_at_death".
+    # Aliases are tried in order; first non-None value wins.
+    FIELD_ALIASES: Dict[str, List[str]] = {
+        "alma_mater":        ["education"],
+        "resting_place":     ["resting_place", "burial"],
+        "notable_awards":    ["notable_awards", "awards"],
+        "doctoral_students": ["doctoral_students", "other_academic_advisors"],
+    }
+
     def _load_intents(self) -> None:
         """Load Padacioso infobox intent files from the bundled locale directory."""
         files = [
-            "known_for.intent", "resting_place.intent", "born.intent", "died.intent",
+            "born.intent", "died.intent", "known_for.intent", "resting_place.intent",
             "children.intent", "alma_mater.intent", "age_at_death.intent",
             "education.intent", "fields.intent", "thesis.intent", "official_website.intent",
+            "institutions.intent", "notable_awards.intent", "notable_work.intent",
+            "movement.intent", "occupation.intent", "predecessor.intent", "successor.intent",
+            "religion.intent", "doctoral_students.intent", "baptised.intent",
+            "father.intent", "mother.intent",
         ]
         locale_dir = os.path.join(os.path.dirname(__file__), "locale")
         if not os.path.isdir(locale_dir):
@@ -89,6 +103,8 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
                     for line in f.read().splitlines():
                         if not line.strip() or line.startswith("#"):
                             continue
+                        # Normalise possessive 's in training samples to match normalised queries.
+                        line = line.replace("'s ", " ").replace("'s ", " ")
                         samples += expand_parentheses(line) if "(" in line else [line]
                 self._register_intent(fn.removesuffix(".intent"), samples, lang)
 
@@ -108,7 +124,9 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
         lang = lang.split("-")[0]
         if lang not in self._intent_matchers:
             return None, utterance
-        match = self._intent_matchers[lang].calc_intent(utterance)
+        # Strip possessive 's so "Darwin's father" matches "{keyword} father" patterns.
+        normalised = utterance.replace("'s ", " ").replace("'s ", " ")
+        match = self._intent_matchers[lang].calc_intent(normalised)
         kw: Optional[str] = match.get("entities", {}).get("keyword")
         if kw:
             LOG.debug(f"DDG infobox intent: {match['name']} keyword={kw!r} conf={match['conf']:.2f}")
@@ -201,7 +219,8 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
         related_topics: List[str] = [t.get("Text") for t in data.get("RelatedTopics", [])]
         infobox: Dict[str, Any] = {}
         for entry in (data.get("Infobox") or {}).get("content", []):
-            k: str = entry["label"].lower().strip()
+            # Normalise spaces to underscores so keys match intent names (e.g. "age at death" → "age_at_death").
+            k: str = entry["label"].lower().strip().replace(" ", "_")
             v = entry["value"]
             try:
                 if k in ("born", "died") and isinstance(v, dict) and "time" in v:
@@ -233,7 +252,13 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
         intent, kw = self._match_infobox_intent(query, lang)
         if intent:
             infobox = self.get_infobox(kw, lang=lang)[0]
+            # Try the intent name directly, then any registered aliases.
             answer = infobox.get(intent)
+            if answer is None:
+                for alias in self.FIELD_ALIASES.get(intent, []):
+                    answer = infobox.get(alias)
+                    if answer is not None:
+                        break
             if answer:
                 return [(answer, 0.9)]
         data = self._search(query, lang)

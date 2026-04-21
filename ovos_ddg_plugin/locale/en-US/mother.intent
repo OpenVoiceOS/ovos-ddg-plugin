@@ -1,0 +1,5 @@
+who is {keyword}'s mother
+who was {keyword}'s mother
+who is the mother of {keyword}
+{keyword}'s (mom|mother|mum)
+what is the name of {keyword}'s mother

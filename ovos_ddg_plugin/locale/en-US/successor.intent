@@ -1,0 +1,5 @@
+who (succeeded|came after) {keyword}
+who was {keyword}'s successor
+who held the (position|role|title) after {keyword}
+who (replaced|took over from) {keyword}
+who followed {keyword} (in power|as leader|as ruler|)
