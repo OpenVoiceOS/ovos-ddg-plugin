@@ -265,12 +265,22 @@ class SearchDuckDuckGoOutput(ToolOutput):
     result: str = Field(..., description="Best DuckDuckGo answer — an infobox field value or the first abstract sentence.")
 
 
+class DDGInfoboxArgs(ToolArguments):
+    query: str = Field(..., description="Entity name to look up (e.g. 'Stephen Hawking', 'Eiffel Tower').")
+    lang: str = Field("en-us", description="BCP-47 language code for the locale.")
+
+
+class DDGInfoboxOutput(ToolOutput):
+    infobox: Dict[str, Any] = Field(default_factory=dict, description="Structured infobox fields (e.g. born, died, known for). Empty dict if DDG has no infobox.")
+    related_topics: List[str] = Field(default_factory=list, description="List of related topic snippets.")
+
+
 # ---------------------------------------------------------------------------
 # Toolbox
 # ---------------------------------------------------------------------------
 
 class DuckDuckGoToolbox(ToolBox):
-    """Agent toolbox exposing DuckDuckGo search and image lookup as callable tools."""
+    """Agent toolbox exposing DuckDuckGo search, infobox, and image lookup as callable tools."""
 
     toolbox_id = "ovos-ddg-tools"
 
@@ -288,8 +298,13 @@ class DuckDuckGoToolbox(ToolBox):
         """Return a DDG image URL for *args.query*, or ``null`` if none is available."""
         return DDGImageOutput(url=self._engine.get_image(args.query, lang=args.lang))
 
+    def ddg_infobox(self, args: DDGInfoboxArgs) -> DDGInfoboxOutput:
+        """Return the full DDG infobox and related topics for *args.query*."""
+        infobox, related = self._engine.get_infobox(args.query, lang=args.lang)
+        return DDGInfoboxOutput(infobox=infobox, related_topics=related)
+
     def discover_tools(self) -> List[AgentTool]:
-        """Declare the two tools provided by this toolbox."""
+        """Declare the three tools provided by this toolbox."""
         return [
             AgentTool(
                 name="search_duckduckgo",
@@ -301,6 +316,17 @@ class DuckDuckGoToolbox(ToolBox):
                 argument_schema=SearchDuckDuckGoArgs,
                 output_schema=SearchDuckDuckGoOutput,
                 tool_call=self.search_ddg,
+            ),
+            AgentTool(
+                name="duckduckgo_infobox",
+                description=(
+                    "Fetch the full structured infobox for an entity from DuckDuckGo "
+                    "(born, died, known for, alma mater, fields, thesis, official website, …). "
+                    "Returns all available fields at once plus related topic snippets."
+                ),
+                argument_schema=DDGInfoboxArgs,
+                output_schema=DDGInfoboxOutput,
+                tool_call=self.ddg_infobox,
             ),
             AgentTool(
                 name="duckduckgo_image",

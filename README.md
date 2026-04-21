@@ -77,16 +77,23 @@ print(url)
 | Tool | Description |
 |------|-------------|
 | `search_duckduckgo` | Best text answer (infobox field or abstract sentence) |
+| `duckduckgo_infobox` | Full structured infobox + related topics for an entity |
 | `duckduckgo_image` | Image URL for a topic, or `null` |
 
 ```python
-from ovos_ddg_plugin import DuckDuckGoToolbox, SearchDuckDuckGoArgs, DDGImageArgs
+from ovos_ddg_plugin import DuckDuckGoToolbox, SearchDuckDuckGoArgs, DDGInfoboxArgs, DDGImageArgs
 
 tb = DuckDuckGoToolbox()
 
 answer = tb.search_ddg(SearchDuckDuckGoArgs(query="Marie Curie birthdate", lang="en-us"))
 print(answer.result)
 # November 7, 1867
+
+box = tb.ddg_infobox(DDGInfoboxArgs(query="Marie Curie", lang="en-us"))
+print(box.infobox.get("born"))
+# November 7, 1867
+print(box.related_topics[:2])
+# ['Radioactivity', 'Nobel Prize in Physics']
 
 img = tb.ddg_image(DDGImageArgs(query="Marie Curie", lang="en-us"))
 print(img.url)

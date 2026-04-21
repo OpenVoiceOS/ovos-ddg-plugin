@@ -14,6 +14,8 @@ from ovos_ddg_plugin import (
     SearchDuckDuckGoOutput,
     DDGImageArgs,
     DDGImageOutput,
+    DDGInfoboxArgs,
+    DDGInfoboxOutput,
 )
 
 
@@ -385,15 +387,16 @@ class TestDuckDuckGoToolbox(unittest.TestCase):
     def test_toolbox_id_is_correct(self):
         self.assertEqual(DuckDuckGoToolbox.toolbox_id, "ovos-ddg-tools")
 
-    def test_discover_tools_returns_exactly_two_tools(self):
+    def test_discover_tools_returns_exactly_three_tools(self):
         tb = self._make_toolbox()
         tools = tb.discover_tools()
-        self.assertEqual(len(tools), 2)
+        self.assertEqual(len(tools), 3)
 
-    def test_discover_tools_has_search_and_image_tools(self):
+    def test_discover_tools_has_all_three_tools(self):
         tb = self._make_toolbox()
         names = {t.name for t in tb.discover_tools()}
         self.assertIn("search_duckduckgo", names)
+        self.assertIn("duckduckgo_infobox", names)
         self.assertIn("duckduckgo_image", names)
 
     def test_search_ddg_returns_first_query_result(self):
@@ -434,11 +437,34 @@ class TestDuckDuckGoToolbox(unittest.TestCase):
         result = tb.ddg_image(DDGImageArgs(query="xyzzy", lang="en-us"))
         self.assertIsNone(result.url)
 
+    def test_ddg_infobox_returns_infobox_and_related(self):
+        tb = self._make_toolbox()
+        tb._engine.get_infobox.return_value = ({"born": "November 7, 1867"}, ["Radioactivity"])
+        result = tb.ddg_infobox(DDGInfoboxArgs(query="Marie Curie", lang="en-us"))
+        self.assertIsInstance(result, DDGInfoboxOutput)
+        self.assertEqual(result.infobox["born"], "November 7, 1867")
+        self.assertEqual(result.related_topics, ["Radioactivity"])
+
+    def test_ddg_infobox_passes_lang_to_engine(self):
+        tb = self._make_toolbox()
+        tb._engine.get_infobox.return_value = ({}, [])
+        tb.ddg_infobox(DDGInfoboxArgs(query="Newton", lang="de-de"))
+        tb._engine.get_infobox.assert_called_once_with("Newton", lang="de-de")
+
+    def test_ddg_infobox_returns_empty_on_no_data(self):
+        tb = self._make_toolbox()
+        tb._engine.get_infobox.return_value = ({}, [])
+        result = tb.ddg_infobox(DDGInfoboxArgs(query="xyzzy", lang="en-us"))
+        self.assertEqual(result.infobox, {})
+        self.assertEqual(result.related_topics, [])
+
     def test_tool_schemas_are_wired_correctly(self):
         tb = self._make_toolbox()
         tools = {t.name: t for t in tb.discover_tools()}
         self.assertIs(tools["search_duckduckgo"].argument_schema, SearchDuckDuckGoArgs)
         self.assertIs(tools["search_duckduckgo"].output_schema, SearchDuckDuckGoOutput)
+        self.assertIs(tools["duckduckgo_infobox"].argument_schema, DDGInfoboxArgs)
+        self.assertIs(tools["duckduckgo_infobox"].output_schema, DDGInfoboxOutput)
         self.assertIs(tools["duckduckgo_image"].argument_schema, DDGImageArgs)
         self.assertIs(tools["duckduckgo_image"].output_schema, DDGImageOutput)
 
@@ -457,6 +483,8 @@ class TestPluginLoading(unittest.TestCase):
             SearchDuckDuckGoOutput,
             DDGImageArgs,
             DDGImageOutput,
+            DDGInfoboxArgs,
+            DDGInfoboxOutput,
         )
 
     def test_engine_is_retrieval_engine_subclass(self):
