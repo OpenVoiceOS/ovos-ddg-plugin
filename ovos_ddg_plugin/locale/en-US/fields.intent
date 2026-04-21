@@ -1,5 +1,5 @@
 what is {person} field of expertise
-what (field|fields) does {person} work in
+what (field|fields) (does|did) {person} work in
 {person} field of (study|research|expertise|work)
 what area does {person} specialize in
 what is {person} academic field

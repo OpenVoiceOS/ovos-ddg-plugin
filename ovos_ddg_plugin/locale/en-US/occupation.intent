@@ -3,7 +3,6 @@ what was {person} (profession|occupation)
 what does {person} do
 what did {person} do
 {person} (job|profession|career)
-what field did {person} work in
 what (type|kind) of work did {person} do
 {person} (career|vocation)
 was {person} a (scientist|writer|politician|artist|musician|actor|)

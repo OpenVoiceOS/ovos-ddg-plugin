@@ -593,6 +593,7 @@ _INTENT_CASES = {
         ("what is Darwin thesis subject", "thesis", "Darwin"),
         ("how old was Hawking on his death", "age_at_death", "Hawking"),
         ("where did Turing work", "institutions", "Turing"),
+        ("what field did Newton work in", "fields", "Newton"),
         ("what awards did Curie win", "notable_awards", "Curie"),
         ("what is Picasso most famous work", "notable_work", "Picasso"),
         ("what movement did Picasso belong to", "movement", "Picasso"),
