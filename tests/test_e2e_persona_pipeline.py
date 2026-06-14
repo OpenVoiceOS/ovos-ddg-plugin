@@ -64,12 +64,10 @@ def _stub_fetch(self, query: str, lang: str):  # noqa: ANN001
     return _STUB_PAYLOAD
 
 
-# Apply the stub before any test code imports or instantiates the engine.
 _fetch_patcher = patch(
     "ovos_ddg_plugin.DuckDuckGoRetrievalEngine._fetch",
     new=_stub_fetch,
 )
-_fetch_patcher.start()
 
 # ---------------------------------------------------------------------------
 # Persona definition
@@ -116,6 +114,7 @@ TEST_PIPELINE = [
 @pytest.fixture(scope="module")
 def mc():
     """Shared MiniCroft instance with DDG network fully stubbed."""
+    _fetch_patcher.start()
     croft = get_minicroft(
         skill_ids=[],
         default_pipeline=TEST_PIPELINE,
