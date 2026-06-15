@@ -21,8 +21,8 @@ from unittest.mock import patch
 
 import pytest
 
-ovoscope = pytest.importorskip("ovoscope")
-ovos_persona = pytest.importorskip("ovos_persona")
+import ovoscope
+import ovos_persona
 
 from ovos_bus_client.message import Message
 from ovos_bus_client.session import Session, SessionManager
@@ -33,9 +33,6 @@ from ovoscope import (
     get_minicroft,
     is_pipeline_available,
 )
-
-if not is_pipeline_available(PERSONA_PIPELINE):
-    pytest.skip("ovos-persona-pipeline-plugin not installed", allow_module_level=True)
 
 # ---------------------------------------------------------------------------
 # Stub: DDG network boundary
