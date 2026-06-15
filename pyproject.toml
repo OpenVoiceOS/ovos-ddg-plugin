@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,14 +7,13 @@ name = "ovos-ddg-plugin"
 dynamic = ["version"]
 description = "OVOS DuckDuckGo plugin — factual Q&A and infobox lookups via DDG Instant Answers"
 readme = "README.md"
-license = {text = "Apache-2.0"}
+license = "Apache-2.0"
 authors = [
     {name = "JarbasAi", email = "jarbasai@mailfence.com"}
 ]
 keywords = ["ovos", "plugin", "duckduckgo", "ddg", "search"]
 requires-python = ">=3.10"
 classifiers = [
-    "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3",
 ]
 dependencies = [
