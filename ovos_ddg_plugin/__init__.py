@@ -204,7 +204,11 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
                 continue
             entity_type = next(iter(entities.keys()), "keyword")
             candidates.append((match["name"], kw, entity_type, match["conf"]))
-        candidates.sort(key=lambda x: x[3], reverse=True)
+        # Highest confidence first; on ties prefer the more specific match, i.e.
+        # the one that captured the shorter keyword (more of the utterance was
+        # matched literally by the template, e.g. "hvem skrev manuskriptet til
+        # {movie}" over the greedier "hvem skrev {book}").
+        candidates.sort(key=lambda x: (x[3], -len(x[1])), reverse=True)
         LOG.debug(f"DDG infobox candidates: {[(n, kw, et) for n, kw, et, _ in candidates]}")
         return [(name, kw, entity_type) for name, kw, entity_type, _ in candidates]
 
