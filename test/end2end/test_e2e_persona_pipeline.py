@@ -107,6 +107,10 @@ TEST_PIPELINE = [
     "ovos-persona-pipeline-plugin-low",
 ]
 
+# Spoken output is emitted on the OVOS-AUDIO spec topic ``ovos.utterance.speak``;
+# the legacy ``speak`` topic is accepted for back-compat with older components.
+SPEAK_TOPICS = ("ovos.utterance.speak", "speak")
+
 
 @pytest.fixture(scope="module")
 def mc():
@@ -162,7 +166,7 @@ class TestDDGPersonaSpeaksThroughPipeline:
         messages = _drive_utterance(mc, sess, "what is duckduckgo", timeout=30)
 
         msg_types = [m.msg_type for m in messages]
-        speak_msgs = [m for m in messages if m.msg_type == "speak"]
+        speak_msgs = [m for m in messages if m.msg_type in SPEAK_TOPICS]
 
         assert speak_msgs, (
             f"Expected at least one 'speak' message; got msg_types: {msg_types}"
@@ -179,7 +183,7 @@ class TestDDGPersonaSpeaksThroughPipeline:
 
         messages = _drive_utterance(mc, sess, "tell me about duckduckgo", timeout=30)
 
-        speak_msgs = [m for m in messages if m.msg_type == "speak"]
+        speak_msgs = [m for m in messages if m.msg_type in SPEAK_TOPICS]
         assert speak_msgs, "Expected a speak message"
 
         # The stub abstract starts with "DuckDuckGo is a privacy-focused…"
@@ -194,7 +198,7 @@ class TestDDGPersonaSpeaksThroughPipeline:
         messages = _drive_utterance(mc, sess, "search for something", timeout=30)
 
         for msg in messages:
-            if msg.msg_type == "speak":
+            if msg.msg_type in SPEAK_TOPICS:
                 assert msg.data.get("utterance", "").strip(), (
                     f"speak message has empty utterance: {msg.data}"
                 )

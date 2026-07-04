@@ -173,6 +173,8 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
                             continue
                         # Normalise possessive 's in training samples to match normalised queries.
                         line = line.replace("'s ", " ").replace("\u2019s ", " ")
+                        # Expand alternations/optionals to the sample set (OVOS-INTENT-1 \u00a74);
+                        # emits single-spaced samples with slots left opaque.
                         expanded = expand(line)
                         # Collapse any double-spaces produced by empty alternatives like (word|).
                         samples += [" ".join(s.split()) for s in expanded]
