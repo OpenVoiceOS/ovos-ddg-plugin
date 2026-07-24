@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1a1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.0.1a1) (2026-07-24)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.0.0a3...1.0.1a1)
+
+**Merged pull requests:**
+
+- fix: migrate off removed padacioso.bracket\_expansion, adopt spec-tools expand [\#31](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/31) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.0.0a3](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.0.0a3) (2026-04-21)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.0.0a2...1.0.0a3)
