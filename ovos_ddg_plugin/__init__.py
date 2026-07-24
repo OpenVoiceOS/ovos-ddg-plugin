@@ -23,7 +23,7 @@ from ovos_plugin_manager.templates.agent_tools import AgentTool, ToolBox, ToolOu
 from ovos_plugin_manager.templates.agents import RetrievalEngine
 from ovos_utils.log import LOG
 from padacioso import IntentContainer
-from padacioso.bracket_expansion import expand_parentheses
+from ovos_spec_tools import expand
 from pydantic import Field
 from quebra_frases import sentence_tokenize
 
@@ -173,7 +173,7 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
                             continue
                         # Normalise possessive 's in training samples to match normalised queries.
                         line = line.replace("'s ", " ").replace("\u2019s ", " ")
-                        expanded = expand_parentheses(line) if "(" in line else [line]
+                        expanded = expand(line)
                         # Collapse any double-spaces produced by empty alternatives like (word|).
                         samples += [" ".join(s.split()) for s in expanded]
                 self._register_intent(fn.removesuffix(".intent"), samples, lang)
