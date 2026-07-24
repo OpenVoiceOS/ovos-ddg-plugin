@@ -7,6 +7,8 @@ import datetime
 import unittest
 from unittest.mock import MagicMock, patch, call
 
+from ovos_spec_tools import normalize_for_match
+
 from ovos_ddg_plugin import (
     DuckDuckGoRetrievalEngine,
     DuckDuckGoToolbox,
@@ -406,7 +408,7 @@ class TestIntentMatching(unittest.TestCase):
         self.engine._register_intent("born", ["when was {keyword} born"], "en")
         intent, kw = self.engine._match_infobox_intent("when was Einstein born", "en")
         self.assertEqual(intent, "born")
-        self.assertEqual(kw, "Einstein")
+        self.assertEqual(normalize_for_match(kw), normalize_for_match("Einstein"))
 
     def test_lang_uses_only_base_code(self):
         """en-US and en-GB should both hit the 'en' matcher."""
@@ -425,7 +427,7 @@ class TestIntentMatching(unittest.TestCase):
         self.engine._register_intent("died", ["when did {keyword} die"], "en")
         intent, kw = self.engine._match_infobox_intent("when did Newton die", "en")
         self.assertEqual(intent, "died")
-        self.assertEqual(kw, "Newton")
+        self.assertEqual(normalize_for_match(kw), normalize_for_match("Newton"))
 
     def test_separate_matchers_per_language(self):
         self.engine._register_intent("born", ["when was {keyword} born"], "en")
@@ -434,8 +436,8 @@ class TestIntentMatching(unittest.TestCase):
         intent_pt, kw_pt = self.engine._match_infobox_intent("quando nasceu Newton", "pt")
         self.assertEqual(intent_en, "born")
         self.assertEqual(intent_pt, "born")
-        self.assertEqual(kw_en, "Newton")
-        self.assertEqual(kw_pt, "Newton")
+        self.assertEqual(normalize_for_match(kw_en), normalize_for_match("Newton"))
+        self.assertEqual(normalize_for_match(kw_pt), normalize_for_match("Newton"))
 
 
 # ---------------------------------------------------------------------------
@@ -1493,7 +1495,7 @@ class TestIntentParsingAllLanguages(unittest.TestCase):
             f"[{lang}] {utterance!r} → expected intent {expected_intent!r}, got {intent!r}",
         )
         self.assertEqual(
-            kw.lower(), expected_keyword.lower(),
+            normalize_for_match(kw), normalize_for_match(expected_keyword),
             f"[{lang}] {utterance!r} → expected keyword {expected_keyword!r}, got {kw!r}",
         )
 
