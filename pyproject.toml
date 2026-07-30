@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=42", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,23 +7,34 @@ name = "ovos-ddg-plugin"
 dynamic = ["version"]
 description = "OVOS DuckDuckGo plugin — factual Q&A and infobox lookups via DDG Instant Answers"
 readme = "README.md"
-license = {text = "Apache-2.0"}
+license = "Apache-2.0"
 authors = [
     {name = "JarbasAi", email = "jarbasai@mailfence.com"}
 ]
 keywords = ["ovos", "plugin", "duckduckgo", "ddg", "search"]
 requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
 dependencies = [
     "ovos-utils>=0.7.0,<1.0.0",
-    "ovos-plugin-manager>=2.3.0a1,<3.0.0",
+    "ovos-plugin-manager>=2.6.1a1,<3.0.0",
     "ovos-config>=0.0.12,<3.0.0",
     "ovos-date-parser>=0.0.1",
     "requests>=2.0.0",
     "langcodes>=3.0.0",
-    "padacioso>=0.2.0",
-    "ovos-spec-tools>=1.0.0a1",
+    "padacioso>=0.2.0,<2.0.0",
+    "ovos-spec-tools>=1.2.2a1,<2.0.0",
     "quebra-frases>=0.3.0",
     "pydantic>=2.0.0,<3.0.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-cov",
+    "ovoscope",
+    "ovos-persona>=0.9.0a3",
 ]
 
 [project.urls]
