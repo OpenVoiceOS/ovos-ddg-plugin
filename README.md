@@ -8,7 +8,7 @@ DuckDuckGo Instant Answers plugin for [OpenVoiceOS](https://openvoiceos.org).
 
 Provides factual Q&A, structured infobox lookups, and image URLs via the [DDG Instant Answers API](https://duckduckgo.com/api). No API key required.
 
-Implements the `opm.agents.retrieval` and `opm.agents.toolbox` entry points — usable both as a standalone Python library and as an OVOS agent plugin.
+It implements the `opm.agents.retrieval` and `opm.agents.toolbox` entry points. Use it as a standalone Python library or as an OVOS agent plugin.
 
 ---
 
@@ -108,13 +108,13 @@ When `query()` receives a natural-language question, it runs it through a bank o
 
 ### How it works
 
-1. **Intent detection** — `_match_infobox_intents()` calls Padacioso's `calc_intents()` (plural) and returns *all* candidate matches sorted by confidence, each as `(intent_name, keyword, entity_type)`.
+1. **Intent detection** — `_match_infobox_intents()` calls Padacioso's `calc_intents()` (plural). It returns all candidate matches sorted by confidence, each as `(intent_name, keyword, entity_type)`.
 
-2. **Entity type** — the slot name used in the intent file becomes the `entity_type` (`"person"`, `"movie"`, `"place"`, `"animal"`, etc.). This contextualises the keyword for downstream use.
+2. **Entity type** — the slot name used in the intent file becomes the `entity_type` (`"person"`, `"movie"`, `"place"`, `"animal"`, etc.). This gives the keyword context for downstream use.
 
-3. **Infobox-based disambiguation** — when two intents tie (e.g. `length` and `running_time` both match "how long is Amazon"), `query()` walks the candidate list, fetches the DDG infobox for the extracted keyword, and returns the first candidate whose field is non-empty in the infobox. The entity type associated with the winning slot does not need to be known ahead of time — the infobox result decides.
+3. **Infobox-based disambiguation** — when two intents tie (for example `length` and `running_time` both match "how long is Amazon"), `query()` walks the candidate list. It fetches the DDG infobox for the extracted keyword and returns the first candidate whose field is non-empty in the infobox. The infobox result decides the winning entity type, so `query()` does not need to know it ahead of time.
 
-4. **Field aliases** — DDG does not always name its keys the same as the intent. `FIELD_ALIASES` maps intent names to the list of DDG keys to try in order (e.g. `alma_mater` → `["education"]`, `resting_place` → `["resting_place", "burial", "burial_place"]`).
+4. **Field aliases** — DDG does not always name its keys the same as the intent. `FIELD_ALIASES` maps intent names to the list of DDG keys to try in order (for example `alma_mater` → `["education"]`, `resting_place` → `["resting_place", "burial", "burial_place"]`).
 
 5. **Fallback** — if no candidate's field is present in the infobox, `query()` falls through to the full-text abstract.
 
@@ -292,7 +292,7 @@ FIELD_ALIASES["my_intent"] = ["ddg_key_1", "ddg_key_2"]
 
 ## Supported locales (DDG API)
 
-The engine maps any BCP-47 tag to the closest DDG locale code via `langcodes`. Infobox date fields (`born`, `died`) are formatted in the requested language using `ovos-date-parser`.
+The engine maps any BCP-47 tag to the closest DDG locale code with `langcodes`. It formats infobox date fields (`born`, `died`) in the requested language using [ovos-date-parser](https://github.com/OpenVoiceOS/ovos-date-parser).
 
 ---
 
@@ -306,6 +306,14 @@ All keys are optional and read from the OVOS plugin config block for `ovos-ddg-p
 
 ---
 
+## Related projects
+
+- [OpenVoiceOS/padacioso](https://github.com/OpenVoiceOS/padacioso) — the intent matcher this plugin uses to detect infobox field questions.
+- [OpenVoiceOS/ovos-date-parser](https://github.com/OpenVoiceOS/ovos-date-parser) — formats infobox date fields in the requested language.
+- [OpenVoiceOS/ovos-rake-keyword-extractor](https://github.com/OpenVoiceOS/ovos-rake-keyword-extractor) — the default keyword extractor plugin, used as a fallback when a direct query returns no result.
+
+---
+
 ## License
 
-Apache 2.0 — see [LICENSE](LICENSE).
+Apache 2.0. See [LICENSE](LICENSE).
