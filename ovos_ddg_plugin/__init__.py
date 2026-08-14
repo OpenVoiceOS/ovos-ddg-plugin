@@ -401,10 +401,10 @@ class DuckDuckGoToolbox(ToolBox):
 
     toolbox_id = "ovos-ddg-tools"
 
-    def __init__(self, config: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(self, config: Optional[Dict[str, Any]] = None, bus: Optional[Any] = None) -> None:
         self.config: Dict[str, Any] = config or {}
         self._engine = DuckDuckGoRetrievalEngine(config=self.config)
-        super().__init__(toolbox_id=self.toolbox_id)
+        super().__init__(toolbox_id=self.toolbox_id, config=config, bus=bus)
 
     def search_ddg(self, args: SearchDuckDuckGoArgs) -> SearchDuckDuckGoOutput:
         """Return the single best DuckDuckGo answer for *args.query*."""
