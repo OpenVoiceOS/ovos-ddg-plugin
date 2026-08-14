@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.2a1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.0.2a1) (2026-08-14)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.0.1a1...1.0.2a1)
+
+**Merged pull requests:**
+
+- fix: DuckDuckGoToolbox constructor rejects the OPM ToolBox loader call [\#34](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/34) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.0.1a1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.0.1a1) (2026-07-24)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.0.0a3...1.0.1a1)
