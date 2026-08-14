@@ -455,6 +455,33 @@ class TestDuckDuckGoToolbox(unittest.TestCase):
     def test_toolbox_id_is_correct(self):
         self.assertEqual(DuckDuckGoToolbox.toolbox_id, "ovos-ddg-tools")
 
+    def test_constructs_the_way_the_persona_server_loader_does(self):
+        # ovos_persona_server.tools._load_toolboxes calls cls(config=cfg, bus=bus).
+        # A plugin whose __init__ does not accept bus raises a TypeError there
+        # and the loader only logs a warning, so the toolbox silently vanishes.
+        with patch("ovos_ddg_plugin.DuckDuckGoRetrievalEngine"):
+            cfg = {"some": "config"}
+            tb = DuckDuckGoToolbox(config=cfg, bus=None)
+        self.assertEqual(tb.config, cfg)
+        self.assertTrue(tb.tools)
+
+    def test_constructor_forwards_bus_so_bind_actually_runs(self):
+        # Passing bus=None (as the loader does when it has no bus of its own)
+        # must not crash, and passing a real bus must reach ToolBox.bind(),
+        # which is only possible now that __init__ forwards it to super().
+        calls = []
+
+        class FakeBus:
+            def on(self, topic, handler):
+                calls.append(topic)
+
+        with patch("ovos_ddg_plugin.DuckDuckGoRetrievalEngine"):
+            tb = DuckDuckGoToolbox(config={}, bus=FakeBus())
+        self.assertEqual(sorted(calls), sorted([
+            "ovos.persona.tools.discover",
+            f"ovos.persona.tools.{tb.toolbox_id}.call",
+        ]))
+
     def test_discover_tools_returns_exactly_three_tools(self):
         tb = self._make_toolbox()
         tools = tb.discover_tools()
