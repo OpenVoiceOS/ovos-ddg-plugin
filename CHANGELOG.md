@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0a1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.1.0a1) (2026-08-30)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.0.2a1...1.1.0a1)
+
+**Merged pull requests:**
+
+- feat: add Kabyle \(kab\) author.intent [\#36](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/36) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.0.2a1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.0.2a1) (2026-08-14)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.0.1a1...1.0.2a1)
