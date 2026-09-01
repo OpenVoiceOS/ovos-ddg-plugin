@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.1a1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.1.1a1) (2026-09-01)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.1.0a1...1.1.1a1)
+
+**Merged pull requests:**
+
+- fix: allow ovos-config 3.x [\#38](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/38) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.1.0a1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.1.0a1) (2026-08-30)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.0.2a1...1.1.0a1)
