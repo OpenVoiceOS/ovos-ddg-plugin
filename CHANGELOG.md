@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.1a2](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.1.1a2) (2026-09-01)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.1.1a1...1.1.1a2)
+
+**Merged pull requests:**
+
+- docs: rewrite README in Simplified Technical English [\#33](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/33) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.1.1a1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.1.1a1) (2026-09-01)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.1.0a1...1.1.1a1)
