@@ -15,7 +15,7 @@ keywords = ["ovos", "plugin", "duckduckgo", "ddg", "search"]
 requires-python = ">=3.10"
 dependencies = [
     "ovos-utils>=0.7.0,<1.0.0",
-    "ovos-plugin-manager>=2.3.0a1,<3.0.0",
+    "ovos-plugin-manager>=2.11.1a1,<3.0.0",
     "ovos-config>=0.0.12,<4.0.0",
     "ovos-date-parser>=0.0.1",
     "requests>=2.0.0",

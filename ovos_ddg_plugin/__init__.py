@@ -11,16 +11,18 @@
 # limitations under the License.
 import datetime
 import os.path
-from typing import Optional, List, Tuple, Dict, Any
+from typing import Optional, List, Tuple, Dict, Any, Union
 
 import requests
 from langcodes import closest_match
+from ovos_bus_client import MessageBusClient
 from ovos_config import Configuration
 from ovos_date_parser import nice_date
 from ovos_plugin_manager.keywords import load_keyword_extract_plugin
 from ovos_plugin_manager.templates.keywords import KeywordExtractor
 from ovos_plugin_manager.templates.agent_tools import AgentTool, ToolBox, ToolOutput, ToolArguments
 from ovos_plugin_manager.templates.agents import RetrievalEngine
+from ovos_utils.fakebus import FakeBus
 from ovos_utils.log import LOG
 from padacioso import IntentContainer
 from ovos_spec_tools import expand
@@ -399,12 +401,12 @@ class DDGInfoboxOutput(ToolOutput):
 class DuckDuckGoToolbox(ToolBox):
     """Agent toolbox exposing DuckDuckGo search, infobox, and image lookup as callable tools."""
 
-    toolbox_id = "ovos-ddg-tools"
-
-    def __init__(self, config: Optional[Dict[str, Any]] = None, bus: Optional[Any] = None) -> None:
+    def __init__(self,
+                 config: Optional[Dict[str, Any]] = None,
+                 bus: Optional[Union[MessageBusClient, FakeBus]] = None) -> None:
         self.config: Dict[str, Any] = config or {}
         self._engine = DuckDuckGoRetrievalEngine(config=self.config)
-        super().__init__(toolbox_id=self.toolbox_id, config=config, bus=bus)
+        super().__init__(toolbox_id="ovos-ddg-tools", config=config, bus=bus)
 
     def search_ddg(self, args: SearchDuckDuckGoArgs) -> SearchDuckDuckGoOutput:
         """Return the single best DuckDuckGo answer for *args.query*."""

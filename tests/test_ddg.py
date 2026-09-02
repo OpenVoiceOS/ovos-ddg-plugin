@@ -453,7 +453,8 @@ class TestDuckDuckGoToolbox(unittest.TestCase):
         return tb
 
     def test_toolbox_id_is_correct(self):
-        self.assertEqual(DuckDuckGoToolbox.toolbox_id, "ovos-ddg-tools")
+        tb = self._make_toolbox()
+        self.assertEqual(tb.toolbox_id, "ovos-ddg-tools")
 
     def test_constructs_the_way_the_persona_server_loader_does(self):
         # ovos_persona_server.tools._load_toolboxes calls cls(config=cfg, bus=bus).
