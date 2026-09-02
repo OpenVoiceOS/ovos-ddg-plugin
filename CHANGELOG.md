@@ -1,5 +1,120 @@
 # Changelog
 
+## [1.1.2a1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.1.2a1) (2026-09-02)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.1.1a2...1.1.2a1)
+
+**Merged pull requests:**
+
+- fix: adopt config/bus ToolBox constructor contract [\#30](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/30) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.1.1a2](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.1.1a2) (2026-09-01)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.1.1a1...1.1.1a2)
+
+**Merged pull requests:**
+
+- docs: rewrite README in Simplified Technical English [\#33](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/33) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.1.1a1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.1.1a1) (2026-09-01)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.1.0a1...1.1.1a1)
+
+**Merged pull requests:**
+
+- fix: allow ovos-config 3.x [\#38](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/38) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.1.0a1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.1.0a1) (2026-08-30)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.0.2a1...1.1.0a1)
+
+**Merged pull requests:**
+
+- feat: add Kabyle \(kab\) author.intent [\#36](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/36) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.0.2a1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.0.2a1) (2026-08-14)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.0.1a1...1.0.2a1)
+
+**Merged pull requests:**
+
+- fix: DuckDuckGoToolbox constructor rejects the OPM ToolBox loader call [\#34](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/34) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.0.1a1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.0.1a1) (2026-07-24)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.0.0a3...1.0.1a1)
+
+**Merged pull requests:**
+
+- fix: migrate off removed padacioso.bracket\_expansion, adopt spec-tools expand [\#31](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/31) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.0.0a3](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.0.0a3) (2026-04-21)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.0.0a2...1.0.0a3)
+
+**Merged pull requests:**
+
+- Update dependency ovos-config to v2 [\#24](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/24) ([renovate[bot]](https://github.com/apps/renovate))
+
+## [1.0.0a2](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.0.0a2) (2026-04-21)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/0.0.4a2...1.0.0a2)
+
+**Merged pull requests:**
+
+- fix: replace TigreGotico workflows with OpenVoiceOS/gh-automations [\#26](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/26) ([JarbasAl](https://github.com/JarbasAl))
+- feat: migrate to agentic plugin pattern \(RetrievalEngine + ToolBox\) + more intents for infobox parsing [\#23](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/23) ([JarbasAl](https://github.com/JarbasAl))
+
+## [0.0.4a2](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/0.0.4a2) (2026-04-07)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/0.0.3a1...0.0.4a2)
+
+**Merged pull requests:**
+
+- translate\(an\): update MiscBlacklist.voc [\#22](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/22) ([ovos-localize[bot]](https://github.com/apps/ovos-localize))
+- Add remaining French DDG intents [\#17](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/17) ([goldyfruit](https://github.com/goldyfruit))
+
+## [0.0.3a1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/0.0.3a1) (2026-03-24)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/0.0.2a4...0.0.3a1)
+
+**Merged pull requests:**
+
+- fix: rename bare lang code locale directories [\#19](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/19) ([ovos-localize[bot]](https://github.com/apps/ovos-localize))
+- Complete French DuckDuckGo locale [\#16](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/16) ([goldyfruit](https://github.com/goldyfruit))
+
+## [0.0.2a4](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/0.0.2a4) (2025-12-19)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/0.0.2a3...0.0.2a4)
+
+**Merged pull requests:**
+
+- Update dependency python to 3.14 [\#5](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/5) ([renovate[bot]](https://github.com/apps/renovate))
+
+## [0.0.2a3](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/0.0.2a3) (2025-12-19)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/0.0.2a2...0.0.2a3)
+
+**Merged pull requests:**
+
+- Configure Renovate [\#4](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/4) ([renovate[bot]](https://github.com/apps/renovate))
+
+## [0.0.2a2](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/0.0.2a2) (2025-11-22)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/0.0.1...0.0.2a2)
+
+## [0.0.1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/0.0.1) (2025-11-22)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/0.0.1a4...0.0.1)
+
+## [0.0.1a4](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/0.0.1a4) (2025-11-22)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/0.0.1a3...0.0.1a4)
+
+## [0.0.1a3](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/0.0.1a3) (2025-11-22)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/31d316e70f86ad041665c6a7304199bca8e0ff1f...0.0.1a3)
+
 
 
 \* *This Changelog was automatically generated by [github_changelog_generator](https://github.com/github-changelog-generator/github-changelog-generator)*

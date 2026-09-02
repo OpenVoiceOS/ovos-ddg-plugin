@@ -1,0 +1,5 @@
+is {animal} (endangered|threatened|extinct)
+what is {animal} conservation status
+{animal} conservation status
+is {animal} (at risk|protected)
+{animal} threatened status
