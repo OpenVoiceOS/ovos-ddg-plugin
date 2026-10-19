@@ -6,6 +6,8 @@ All network calls and OVOS config are mocked — no API key or running daemon re
 import datetime
 import os
 import socket
+import subprocess
+import sys
 import threading
 import unittest
 from unittest.mock import MagicMock, patch, call
@@ -174,7 +176,7 @@ class TestGetInfobox(unittest.TestCase):
         self.engine._search = MagicMock(return_value=_infobox_payload("Born", {"time": dt_str}))
         fake_date = "January 8, 1942"
         with patch("ovos_ddg_plugin.Configuration", return_value={}), \
-             patch("ovos_ddg_plugin.nice_date", return_value=fake_date) as mock_nd:
+             patch("ovos_date_parser.nice_date", return_value=fake_date) as mock_nd:
             infobox, _ = self.engine.get_infobox("Hawking", lang="en-us")
         mock_nd.assert_called_once()
         self.assertEqual(infobox["born"], fake_date)
@@ -183,7 +185,7 @@ class TestGetInfobox(unittest.TestCase):
         dt_str = "+2018-03-14T00:00:00Z"
         self.engine._search = MagicMock(return_value=_infobox_payload("Died", {"time": dt_str}))
         with patch("ovos_ddg_plugin.Configuration", return_value={}), \
-             patch("ovos_ddg_plugin.nice_date", return_value="March 14, 2018"):
+             patch("ovos_date_parser.nice_date", return_value="March 14, 2018"):
             infobox, _ = self.engine.get_infobox("Hawking", lang="en-us")
         self.assertIn("died", infobox)
 
@@ -1617,6 +1619,16 @@ class TestDuckDuckGoStalledConnection(unittest.TestCase):
         worker.join(10)
         self.assertFalse(worker.is_alive(), "the request still waits after 10 s")
         self.assertEqual(result["data"], {})
+
+
+class TestImportCost(unittest.TestCase):
+
+    def test_import_does_not_load_the_date_parser(self):
+        # ovos_date_parser loads every locale when imported, which takes tens
+        # of seconds; a toolbox host imports this plugin at start.
+        code = "import sys, ovos_ddg_plugin; print('ovos_date_parser' in sys.modules)"
+        out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=True)
+        self.assertEqual(out.stdout.strip().splitlines()[-1], "False")
 
 
 if __name__ == "__main__":
