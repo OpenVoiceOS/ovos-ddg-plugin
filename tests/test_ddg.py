@@ -7,6 +7,9 @@ import datetime
 import unittest
 from unittest.mock import MagicMock, patch, call
 
+from ovos_bus_client.message import Message
+from ovos_utils.fakebus import FakeBus
+
 from ovos_spec_tools import normalize_for_match
 
 from ovos_ddg_plugin import (
@@ -467,21 +470,29 @@ class TestDuckDuckGoToolbox(unittest.TestCase):
         self.assertTrue(tb.tools)
 
     def test_constructor_forwards_bus_so_bind_actually_runs(self):
-        # Passing bus=None (as the loader does when it has no bus of its own)
-        # must not crash, and passing a real bus must reach ToolBox.bind(),
-        # which is only possible now that __init__ forwards it to super().
-        calls = []
-
-        class FakeBus:
-            def on(self, topic, handler):
-                calls.append(topic)
-
+        # Passing a bus to __init__ must reach ToolBox.bind(), so the toolbox
+        # answers the OVOS-TOOLS-1 topics with real values: discover lists the
+        # tools of this toolbox, and a call runs the tool and returns its result.
+        bus = FakeBus()
         with patch("ovos_ddg_plugin.DuckDuckGoRetrievalEngine"):
-            tb = DuckDuckGoToolbox(config={}, bus=FakeBus())
-        self.assertEqual(sorted(calls), sorted([
-            "ovos.persona.tools.discover",
-            f"ovos.persona.tools.{tb.toolbox_id}.call",
-        ]))
+            tb = DuckDuckGoToolbox(config={}, bus=bus)
+        tb._engine = MagicMock()
+        tb._engine.query.return_value = [("Newton invented calculus.", 0.9)]
+        replies = []
+        bus.on("ovos.persona.tools.discover.response", lambda m: replies.append(m.data))
+        bus.on(f"ovos.persona.tools.{tb.toolbox_id}.call.response", lambda m: replies.append(m.data))
+
+        bus.emit(Message("ovos.persona.tools.discover"))
+        bus.emit(Message(f"ovos.persona.tools.{tb.toolbox_id}.call",
+                         {"name": "search_duckduckgo",
+                          "kwargs": {"query": "Isaac Newton", "lang": "en-us"}}))
+
+        discovered, called = replies
+        self.assertEqual(discovered["toolbox_id"], "ovos-ddg-tools")
+        self.assertEqual({t["name"] for t in discovered["tools"]},
+                         {"search_duckduckgo", "duckduckgo_infobox", "duckduckgo_image"})
+        self.assertEqual(called["result"]["result"], "Newton invented calculus.")
+        tb._engine.query.assert_called_once_with("Isaac Newton", lang="en-us", k=1)
 
     def test_discover_tools_returns_exactly_three_tools(self):
         tb = self._make_toolbox()
