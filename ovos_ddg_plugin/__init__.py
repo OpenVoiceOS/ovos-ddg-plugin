@@ -42,6 +42,9 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
             abstract (default: "ovos-rake-keyword-extractor").
     """
 
+    # seconds; a stalled connection must not hold a bus handler forever
+    REQUEST_TIMEOUT: float = 5
+
     # DDG reverses the standard BCP-47 lang-region order in its locale codes
     # (e.g. "en-US" → "us-en", "de-DE" → "de-de").
     LOCALE_MAPPING: Dict[str, str] = {
@@ -249,6 +252,7 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
             return requests.get(
                 "https://api.duckduckgo.com",
                 params={"format": "json", "kl": self.LOCALE_MAPPING[best_lang], "q": query},
+                timeout=self.REQUEST_TIMEOUT,
             ).json()
         except Exception:
             return {}

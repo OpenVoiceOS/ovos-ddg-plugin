@@ -4,6 +4,9 @@ Unit tests for ovos-ddg-plugin.
 All network calls and OVOS config are mocked — no API key or running daemon required.
 """
 import datetime
+import os
+import socket
+import threading
 import unittest
 from unittest.mock import MagicMock, patch, call
 
@@ -1586,6 +1589,34 @@ def _make_ambiguous_test(lang, utterance, intents, keyword):
 for _lang, _utterance, _intents, _keyword in _AMBIGUOUS_INTENT_CASES:
     _name = f"test_ambiguous_{_lang}_{'_or_'.join(_intents)}_{_keyword.lower().replace(' ', '_')}"
     setattr(TestIntentParsingAllLanguages, _name, _make_ambiguous_test(_lang, _utterance, _intents, _keyword))
+
+
+class TestDuckDuckGoStalledConnection(unittest.TestCase):
+    # A server that accepts the connection and never answers must not hold the
+    # caller forever: a bus handler that waits on it never answers again.
+
+    def setUp(self):
+        self.server = socket.socket()
+        self.server.bind(("127.0.0.1", 0))
+        self.server.listen(5)
+        proxy = f"http://127.0.0.1:{self.server.getsockname()[1]}"
+        self.env = patch.dict(os.environ, {"HTTPS_PROXY": proxy, "HTTP_PROXY": proxy, "NO_PROXY": ""})
+        self.env.start()
+
+    def tearDown(self):
+        self.env.stop()
+        self.server.close()
+
+    def test_fetch_gives_up_on_a_silent_server(self):
+        engine = DuckDuckGoRetrievalEngine(config={})
+        engine.REQUEST_TIMEOUT = 0.5
+        result = {}
+        worker = threading.Thread(target=lambda: result.update(data=engine._fetch("Isaac Newton", "en-us")),
+                                  daemon=True)
+        worker.start()
+        worker.join(10)
+        self.assertFalse(worker.is_alive(), "the request still waits after 10 s")
+        self.assertEqual(result["data"], {})
 
 
 if __name__ == "__main__":
