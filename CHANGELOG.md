@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.2a2](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.1.2a2) (2026-10-19)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.1.2a1...1.1.2a2)
+
+**Merged pull requests:**
+
+- test: assert the toolbox bus contract by its answers [\#43](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/43) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.1.2a1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.1.2a1) (2026-09-02)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.1.1a2...1.1.2a1)
@@ -102,18 +110,6 @@
 ## [0.0.2a2](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/0.0.2a2) (2025-11-22)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/0.0.1...0.0.2a2)
-
-## [0.0.1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/0.0.1) (2025-11-22)
-
-[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/0.0.1a4...0.0.1)
-
-## [0.0.1a4](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/0.0.1a4) (2025-11-22)
-
-[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/0.0.1a3...0.0.1a4)
-
-## [0.0.1a3](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/0.0.1a3) (2025-11-22)
-
-[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/31d316e70f86ad041665c6a7304199bca8e0ff1f...0.0.1a3)
 
 
 
