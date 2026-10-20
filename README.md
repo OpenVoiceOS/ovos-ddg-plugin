@@ -302,7 +302,7 @@ All keys are optional and read from the OVOS plugin config block for `ovos-ddg-p
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `keyword_extractor` | `"ovos-rake-keyword-extractor"` | OPM keyword extractor plugin used when a direct query returns no result |
+| `keyword_extractor` | `"ovos-rake-keyword-extractor"` | OPM keyword extractor plugin used when a direct query returns no result. The default is provided by the `RAKEkeywords` package, which this plugin installs. |
 
 ---
 
@@ -310,7 +310,7 @@ All keys are optional and read from the OVOS plugin config block for `ovos-ddg-p
 
 - [OpenVoiceOS/padacioso](https://github.com/OpenVoiceOS/padacioso) — the intent matcher this plugin uses to detect infobox field questions.
 - [OpenVoiceOS/ovos-date-parser](https://github.com/OpenVoiceOS/ovos-date-parser) — formats infobox date fields in the requested language.
-- [OpenVoiceOS/ovos-rake-keyword-extractor](https://github.com/OpenVoiceOS/ovos-rake-keyword-extractor) — the default keyword extractor plugin, used as a fallback when a direct query returns no result.
+- [TigreGotico/RAKEkeywords](https://github.com/TigreGotico/RAKEkeywords) — the package that provides the `ovos-rake-keyword-extractor` plugin. It is the default keyword extractor plugin, used as a fallback when a direct query returns no result.
 
 ---
 

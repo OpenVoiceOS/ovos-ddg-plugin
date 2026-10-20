@@ -260,9 +260,13 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
             return data
         kwx = self._keyword_extractor(lang)
         if kwx:
-            keywords = kwx.extract(query, lang=lang)
+            try:
+                keywords = kwx.extract(query, lang=lang)
+            except ValueError:
+                LOG.debug(f"DDG: keyword extractor does not support {lang!r}")
+                return {}
             if keywords:
-                kw = max(keywords)
+                kw = max(keywords, key=keywords.get)
                 LOG.debug(f"DDG keyword fallback: {kw!r}")
                 return self._fetch(kw, lang)
         return {}
