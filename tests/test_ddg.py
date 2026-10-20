@@ -112,7 +112,7 @@ class TestSearch(unittest.TestCase):
             {"AbstractText": "Gravity pulls objects downward."},
         ])
         kwx = MagicMock()
-        kwx.extract.return_value = ["gravity"]
+        kwx.extract.return_value = {"gravity": 1.0}
         self.engine._keyword_extractor = MagicMock(return_value=kwx)
         result = self.engine._search("what is the force of gravity", lang="en-us")
         self.assertEqual(result["AbstractText"], "Gravity pulls objects downward.")
@@ -132,14 +132,23 @@ class TestSearch(unittest.TestCase):
         result = self.engine._search("???", lang="en-us")
         self.assertEqual(result, {})
 
+    def test_returns_empty_when_keyword_extractor_rejects_language(self):
+        self.engine._fetch = MagicMock(return_value={})
+        kwx = MagicMock()
+        kwx.extract.side_effect = ValueError("Unsupported language: kab")
+        self.engine._keyword_extractor = MagicMock(return_value=kwx)
+        result = self.engine._search("who painted the Mona Lisa", lang="kab")
+        self.assertEqual(result, {})
+        self.assertEqual(self.engine._fetch.call_count, 1)
+
     def test_uses_highest_scoring_keyword(self):
         self.engine._fetch = MagicMock(side_effect=[{}, {}])
         kwx = MagicMock()
-        kwx.extract.return_value = ["apple", "zebra", "mango"]
+        kwx.extract.return_value = {"apple": 1.0, "zebra": 2.0, "mango": 9.0}
         self.engine._keyword_extractor = MagicMock(return_value=kwx)
         self.engine._search("some query", lang="en-us")
         second_call_query = self.engine._fetch.call_args_list[1][0][0]
-        self.assertEqual(second_call_query, max(["apple", "zebra", "mango"]))
+        self.assertEqual(second_call_query, "mango")
 
 
 # ---------------------------------------------------------------------------
