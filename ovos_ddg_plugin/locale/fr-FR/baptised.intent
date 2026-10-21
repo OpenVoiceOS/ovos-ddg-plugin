@@ -1,0 +1,5 @@
+quand {keyword} a-t-il été baptisé
+quand {keyword} a-t-elle été baptisée
+quelle est la date de baptême de {keyword}
+quand a eu lieu le baptême de {keyword}
+{keyword} date de (baptême|baptisation)

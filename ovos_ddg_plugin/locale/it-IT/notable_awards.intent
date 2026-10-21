@@ -1,0 +1,5 @@
+quali premi ha (vinto|ricevuto) {person}
+quali riconoscimenti ha ottenuto {person}
+{person} ha vinto qualche (premio|onorificenza)
+{person} (premi|riconoscimenti|onorificenze)
+quali distinzioni ha ricevuto {person}

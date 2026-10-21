@@ -1,0 +1,12 @@
+when was {person} (baptised|baptized)
+{person} (baptism|baptismal) (date|day)
+when was the (baptism|baptismal ceremony) of {person}
+{person} baptism date
+what is {person} (baptism|baptismal) date
+when did {person} get (baptised|baptized)
+on what date was {person} (baptised|baptized)
+in what year was {person} (baptised|baptized)
+tell me {person} baptism date
+when (was|did) {person} (receive|get) (his|her|their) baptism
+{person} was (baptised|baptized) when
+where was {person} (baptised|baptized)

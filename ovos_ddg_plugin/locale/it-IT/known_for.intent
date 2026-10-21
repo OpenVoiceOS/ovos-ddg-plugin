@@ -1,0 +1,5 @@
+per cosa è (famoso|famosa|noto|nota) {person}
+per cosa è conosciuto {person}
+cosa ha reso celebre {person}
+{person} è famoso per (cosa|che cosa|quale motivo)
+per quale motivo è celebre {person}

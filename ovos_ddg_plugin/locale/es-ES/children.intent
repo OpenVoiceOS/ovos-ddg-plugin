@@ -1,0 +1,5 @@
+cuántos hijos (tuvo|tiene) {keyword}
+cuántos hijos (tiene|tenía|tuvo) {keyword}
+hijos de {keyword}
+tiene {keyword} (hijos|descendencia)
+cuántos (niños|hijos) tiene {keyword}

@@ -1,0 +1,6 @@
+who is the (head coach|manager|coach) of {team}
+{team} head coach
+{team} manager
+who coaches {team}
+who manages {team}
+who is {team} (coach|manager)

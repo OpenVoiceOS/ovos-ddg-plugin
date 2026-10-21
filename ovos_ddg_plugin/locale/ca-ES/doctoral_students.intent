@@ -1,0 +1,5 @@
+qui eren els doctorands de {keyword}
+a qui va supervisar {keyword} en el doctorat
+qui va fer el doctorat amb {keyword}
+{keyword} (doctorands|estudiants de doctorat|supervisats)
+quins investigadors va dirigir {keyword}
