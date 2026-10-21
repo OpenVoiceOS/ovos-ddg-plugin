@@ -311,6 +311,8 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
         related_topics: List[str] = [t.get("Text") for t in data.get("RelatedTopics", [])]
         infobox: Dict[str, Any] = {}
         for entry in (data.get("Infobox") or {}).get("content", []):
+            if "label" not in entry:
+                continue
             # Normalise spaces to underscores so keys match intent names (e.g. "age at death" → "age_at_death").
             k: str = entry["label"].lower().strip().replace(" ", "_")
             v = entry["value"]
