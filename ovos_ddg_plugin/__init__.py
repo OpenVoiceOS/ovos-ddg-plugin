@@ -17,7 +17,6 @@ import requests
 from langcodes import closest_match
 from ovos_bus_client import MessageBusClient
 from ovos_config import Configuration
-from ovos_date_parser import nice_date
 from ovos_plugin_manager.keywords import load_keyword_extract_plugin
 from ovos_plugin_manager.templates.keywords import KeywordExtractor
 from ovos_plugin_manager.templates.agent_tools import AgentTool, ToolBox, ToolOutput, ToolArguments
@@ -318,6 +317,8 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
             v = entry["value"]
             try:
                 if k in ("born", "died") and isinstance(v, dict) and "time" in v:
+                    # ovos_date_parser takes seconds to import; only dates need it
+                    from ovos_date_parser import nice_date
                     dt = datetime.datetime.strptime(v["time"], "+%Y-%m-%dT%H:%M:%SZ")
                     infobox[k] = nice_date(dt, lang=lang)
                 else:
