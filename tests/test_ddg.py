@@ -4,6 +4,8 @@ Unit tests for ovos-ddg-plugin.
 All network calls and OVOS config are mocked — no API key or running daemon required.
 """
 import datetime
+import subprocess
+import sys
 import unittest
 from unittest.mock import MagicMock, patch, call
 
@@ -44,6 +46,39 @@ def _infobox_payload(label: str, value) -> dict:
 # ---------------------------------------------------------------------------
 # _fetch
 # ---------------------------------------------------------------------------
+
+class TestImport(unittest.TestCase):
+
+    def test_import_does_not_load_date_parser(self):
+        # ovos_date_parser takes seconds to import; the plugin loads it on first date use.
+        out = subprocess.run(
+            [sys.executable, "-c", "import sys, ovos_ddg_plugin; print('ovos_date_parser' in sys.modules)"],
+            capture_output=True, text=True, check=True)
+        self.assertEqual(out.stdout.strip(), "False")
+
+
+class TestLazyDateParser(unittest.TestCase):
+
+    def _date_parser_loaded_after(self, payload: dict) -> str:
+        code = (
+            "import sys\n"
+            "from unittest.mock import MagicMock, patch\n"
+            "from ovos_ddg_plugin import DuckDuckGoRetrievalEngine\n"
+            "e = DuckDuckGoRetrievalEngine.__new__(DuckDuckGoRetrievalEngine)\n"
+            f"e._search = MagicMock(return_value={payload!r})\n"
+            "e.get_infobox('Eiffel Tower', lang='en-us')\n"
+            "print('ovos_date_parser' in sys.modules)\n")
+        out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=True)
+        return out.stdout.strip().splitlines()[-1]
+
+    def test_infobox_without_dates_does_not_load_date_parser(self):
+        payload = _infobox_payload("Height", "330 m")
+        self.assertEqual(self._date_parser_loaded_after(payload), "False")
+
+    def test_infobox_with_a_date_loads_date_parser(self):
+        payload = _infobox_payload("Born", {"time": "+1942-01-08T00:00:00Z"})
+        self.assertEqual(self._date_parser_loaded_after(payload), "True")
+
 
 class TestFetch(unittest.TestCase):
 
@@ -180,7 +215,7 @@ class TestGetInfobox(unittest.TestCase):
         self.engine._search = MagicMock(return_value=_infobox_payload("Born", {"time": dt_str}))
         fake_date = "January 8, 1942"
         with patch("ovos_ddg_plugin.Configuration", return_value={}), \
-             patch("ovos_ddg_plugin.nice_date", return_value=fake_date) as mock_nd:
+             patch("ovos_date_parser.nice_date", return_value=fake_date) as mock_nd:
             infobox, _ = self.engine.get_infobox("Hawking", lang="en-us")
         mock_nd.assert_called_once()
         self.assertEqual(infobox["born"], fake_date)
@@ -189,7 +224,7 @@ class TestGetInfobox(unittest.TestCase):
         dt_str = "+2018-03-14T00:00:00Z"
         self.engine._search = MagicMock(return_value=_infobox_payload("Died", {"time": dt_str}))
         with patch("ovos_ddg_plugin.Configuration", return_value={}), \
-             patch("ovos_ddg_plugin.nice_date", return_value="March 14, 2018"):
+             patch("ovos_date_parser.nice_date", return_value="March 14, 2018"):
             infobox, _ = self.engine.get_infobox("Hawking", lang="en-us")
         self.assertIn("died", infobox)
 
