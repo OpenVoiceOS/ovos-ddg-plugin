@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.5a1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.1.5a1) (2026-10-21)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.1.4a1...1.1.5a1)
+
+**Merged pull requests:**
+
+- fix: load ovos\_date\_parser on first use [\#50](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/50) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+- fix: skip infobox entries that have no label [\#49](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/49) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.1.4a1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.1.4a1) (2026-10-20)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.1.3a1...1.1.4a1)
