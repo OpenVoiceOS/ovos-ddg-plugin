@@ -377,6 +377,20 @@ class TestQuery(unittest.TestCase):
             self.engine.query("x")
         self.engine._match_infobox_intents.assert_called_once_with("x", "pt-pt")
 
+    def test_infobox_entry_without_label_does_not_hide_answer(self):
+        # DDG puts a "wiki_maps_trigger" entry with no label in the Mount Everest infobox.
+        # Here it comes before the Elevation entry, so skipping it must not end the loop.
+        payload = {"Infobox": {"content": [
+            {"data_type": "wiki_maps_trigger", "value": "/local.js?&ha=1&lla=86.92,27.98", "wiki_order": 999},
+            {"data_type": "string", "label": "Elevation",
+             "value": "Ranked 1st, (Special definition for Everest)", "wiki_order": 0},
+        ]}, "RelatedTopics": []}
+        engine = DuckDuckGoRetrievalEngine()
+        engine._search = MagicMock(return_value=payload)
+        with patch("ovos_ddg_plugin.Configuration", return_value={}):
+            results = engine.query("how tall is Mount Everest", lang="en-us")
+        self.assertEqual(results, [("Ranked 1st, (Special definition for Everest)", 0.9)])
+
     def test_ambiguous_intent_resolved_by_infobox(self):
         # "wie lang ist Amazon" ties between length({place}) and running_time({movie}).
         # The infobox for "Amazon" has "length" but not "running_time" → length wins.
