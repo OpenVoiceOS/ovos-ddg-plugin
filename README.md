@@ -292,7 +292,7 @@ FIELD_ALIASES["my_intent"] = ["ddg_key_1", "ddg_key_2"]
 
 ## Supported locales (DDG API)
 
-The engine maps any BCP-47 tag to the closest DDG locale code with `ovos_spec_tools.closest_lang`. A tag with no region maps from its default region, so `en` uses `uk-en` and `pt` uses `pt-pt`. It formats infobox date fields (`born`, `died`) in the requested language using [ovos-date-parser](https://github.com/OpenVoiceOS/ovos-date-parser).
+DuckDuckGo serves the 67 regions in its `kl` list, and `LOCALE_MAPPING` keys each one on the language tag that region serves, such as `ja-JP` for `jp-jp` and `zh-TW` for `tw-tzh`. The engine sends the region whose tag is closest to the requested tag, with `ovos_spec_tools.closest_lang`. A tag with no region maps from its default region, so `en` uses `uk-en` and `pt` uses `pt-pt`. A language that no region serves, such as `hi` or `sw`, gets no DDG answer. The engine formats infobox date fields (`born`, `died`) in the requested language using [ovos-date-parser](https://github.com/OpenVoiceOS/ovos-date-parser).
 
 ---
 
