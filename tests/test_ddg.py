@@ -85,6 +85,39 @@ class TestFetch(unittest.TestCase):
     def setUp(self):
         self.engine = _make_engine()
 
+    def test_languages_reach_their_ddg_region(self):
+        """Expected codes come from the kl table at
+        https://duckduckgo.com/duckduckgo-help-pages/settings/params/"""
+        ddg_regions = {
+            "Catalan": "ct-ca",
+            "Hong Kong": "hk-tzh",
+            "Japan": "jp-jp",
+            "Korea": "kr-kr",
+            "Slovenia": "sl-sl",
+            "Taiwan": "tw-tzh",
+            "United States (es)": "ue-es",
+        }
+        cases = [
+            ("ja", "Japan"),
+            ("ja-JP", "Japan"),
+            ("ko", "Korea"),
+            ("ko-KR", "Korea"),
+            ("zh-TW", "Taiwan"),
+            ("zh-Hant", "Taiwan"),
+            ("zh-HK", "Hong Kong"),
+            ("es-US", "United States (es)"),
+            ("ca-ES", "Catalan"),
+            ("sl-SI", "Slovenia"),
+        ]
+        for bcp47, region in cases:
+            with self.subTest(lang=bcp47):
+                with patch("ovos_ddg_plugin.requests.get") as mock_get:
+                    mock_get.return_value.json.return_value = {}
+                    self.engine._fetch("test", lang=bcp47)
+                mock_get.assert_called_once()
+                _, kwargs = mock_get.call_args
+                self.assertEqual(kwargs["params"]["kl"], ddg_regions[region])
+
     def test_returns_json_on_success(self):
         payload = {"AbstractText": "Isaac Newton was a physicist."}
         with patch("ovos_ddg_plugin.requests.get") as mock_get:
