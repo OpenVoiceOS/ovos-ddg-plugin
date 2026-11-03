@@ -109,6 +109,8 @@ class TestFetch(unittest.TestCase):
             ("zh-HK", "Hong Kong"),
             ("es-US", "United States (es)"),
             ("es-419", "Latin America"),
+            ("es-CU", "Latin America"),
+            ("es-DO", "Latin America"),
             ("es-AR", "Argentina"),
             ("ca-ES", "Catalan"),
             ("sl-SI", "Slovenia"),
