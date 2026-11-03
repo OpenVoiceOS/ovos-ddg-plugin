@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.7a1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.1.7a1) (2026-11-03)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.1.6a1...1.1.7a1)
+
+**Merged pull requests:**
+
+- fix: key LOCALE\_MAPPING on the language each DDG region serves [\#54](https://github.com/OpenVoiceOS/ovos-ddg-plugin/pull/54) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.1.6a1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.1.6a1) (2026-10-21)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.1.5a1...1.1.6a1)
+
 ## [1.1.5a1](https://github.com/OpenVoiceOS/ovos-ddg-plugin/tree/1.1.5a1) (2026-10-21)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-ddg-plugin/compare/1.1.4a1...1.1.5a1)
