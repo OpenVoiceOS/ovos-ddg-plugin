@@ -14,7 +14,6 @@ import os.path
 from typing import Optional, List, Tuple, Dict, Any, Union
 
 import requests
-from langcodes import closest_match
 from ovos_bus_client import MessageBusClient
 from ovos_config import Configuration
 from ovos_plugin_manager.keywords import load_keyword_extract_plugin
@@ -24,7 +23,7 @@ from ovos_plugin_manager.templates.agents import RetrievalEngine
 from ovos_utils.fakebus import FakeBus
 from ovos_utils.log import LOG
 from padacioso import IntentContainer
-from ovos_spec_tools import expand
+from ovos_spec_tools import closest_lang, expand
 from pydantic import Field
 from quebra_frases import sentence_tokenize
 
@@ -240,8 +239,8 @@ class DuckDuckGoRetrievalEngine(RetrievalEngine):
 
         Returns an empty dict on network errors or unsupported locales.
         """
-        best_lang, distance = closest_match(lang, self.LOCALE_MAPPING)
-        if distance > 10:
+        best_lang = closest_lang(lang, list(self.LOCALE_MAPPING))
+        if best_lang is None:
             LOG.debug(f"DDG: no supported locale for {lang!r}")
             return {}
         try:

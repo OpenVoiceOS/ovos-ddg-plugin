@@ -124,6 +124,18 @@ class TestFetch(unittest.TestCase):
             _, kwargs = mock_get.call_args
             self.assertEqual(kwargs["params"]["kl"], expected_kl, bcp47)
 
+    def test_bare_tag_uses_the_default_region(self):
+        """A tag with no region maps from the region where the language
+        first appeared and is still spoken: en is en-GB, pt is pt-PT."""
+        cases = [("en", "uk-en"), ("pt", "pt-pt")]
+        for bcp47, expected_kl in cases:
+            with self.subTest(lang=bcp47):
+                with patch("ovos_ddg_plugin.requests.get") as mock_get:
+                    mock_get.return_value.json.return_value = {}
+                    self.engine._fetch("test", lang=bcp47)
+                _, kwargs = mock_get.call_args
+                self.assertEqual(kwargs["params"]["kl"], expected_kl)
+
 
 # ---------------------------------------------------------------------------
 # _search
