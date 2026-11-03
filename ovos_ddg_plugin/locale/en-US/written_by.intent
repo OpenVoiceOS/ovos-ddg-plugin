@@ -1,0 +1,4 @@
+who (wrote|authored) the (screenplay|script|story) of {movie}
+{movie} (screenplay|script) writer
+who wrote the script (for|of) {movie}
+{movie} written by who

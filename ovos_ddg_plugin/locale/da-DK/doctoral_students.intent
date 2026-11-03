@@ -1,0 +1,5 @@
+hvem var {keyword}s ph.d.-studerende
+hvem vejledte {keyword} i ph.d.-arbejde
+hvem tog en doktorgrad under {keyword}
+{keyword} (ph.d.-studerende|vejledte studerende|doktorander)
+hvilke forskere blev vejledt af {keyword}

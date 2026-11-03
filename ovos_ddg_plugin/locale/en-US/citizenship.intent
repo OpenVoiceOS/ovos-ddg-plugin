@@ -1,0 +1,12 @@
+what is {person} citizenship
+{person} citizenship
+{person} nationality
+what (country|nation) is {person} a citizen of
+{person} (national|citizenship) (status|identity)
+is {person} (american|british|french|german|australian|canadian)
+tell me {person} citizenship
+{person} (holds|has) what (citizenship|nationality|passport)
+what (passport|nationality) does {person} have
+where is {person} from [originally]
+{person} country of (citizenship|origin|birth)
+what [national] citizenship does {person} hold
