@@ -89,10 +89,12 @@ class TestFetch(unittest.TestCase):
         """Expected codes come from the kl table at
         https://duckduckgo.com/duckduckgo-help-pages/settings/params/"""
         ddg_regions = {
+            "Argentina": "ar-es",
             "Catalan": "ct-ca",
             "Hong Kong": "hk-tzh",
             "Japan": "jp-jp",
             "Korea": "kr-kr",
+            "Latin America": "xl-es",
             "Slovenia": "sl-sl",
             "Taiwan": "tw-tzh",
             "United States (es)": "ue-es",
@@ -106,6 +108,8 @@ class TestFetch(unittest.TestCase):
             ("zh-Hant", "Taiwan"),
             ("zh-HK", "Hong Kong"),
             ("es-US", "United States (es)"),
+            ("es-419", "Latin America"),
+            ("es-AR", "Argentina"),
             ("ca-ES", "Catalan"),
             ("sl-SI", "Slovenia"),
         ]
