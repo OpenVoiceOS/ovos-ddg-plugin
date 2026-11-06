@@ -12,3 +12,10 @@ jobs:
       python_versions: '["3.10", "3.11", "3.12", "3.13", "3.14"]'
       install_extras: ''
       test_path: 'tests'
+      # tests/ is a package, so pytest's default prepend import mode puts the
+      # repository root back on sys.path and the suite imports the checkout
+      # instead of the wheel the job just installed. importlib puts neither the
+      # root nor the test directory on sys.path, and pytest still derives the
+      # test module names from the rootdir, so imports inside tests/ keep
+      # working (T-5855, T-5492).
+      pytest_args: '--import-mode=importlib'
